@@ -115,23 +115,30 @@ const StudentApplications = () => {
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 m-8 rounded-2xl'>
                 {applications.length > 0 ? (
                     applications.map((application) => (
-                        <div key={application.id} className='p-4 border rounded-lg shadow-md'>
+                        <div key={application.id} className={`p-4 rounded-2xl border ${application.status === 'accepted' ? 'bg-emerald-50' : application.status === 'rejected' ? 'bg-rose-50' : 'bg-amber-50'}`}>
                             {application.postingDetail && (
                                 <>
                                     <h2 className={`text-2xl font-semibold ${application.status === 'accepted' ? 'text-green-500' : application.status === 'rejected' ? 'text-red-500' : 'text-yellow-500'}`}>
                                         {application.postingDetail.title}
                                     </h2>
+                                    {application.status === 'accepted' && <p className="bg-green-200 text-green-800 text-lg font-bold px-3 py-2 rounded-xl">Congratulations! You have been accepted to {application.postingDetail.title}.</p>}
+                                    {application.status === 'rejected' && <p className="bg-red-200 text-rose-800 text-lg font-bold px-3 py-2 rounded-xl">We are sorry to inform you that your application to {application.postingDetail.title} has been rejected.</p>}
+                                    <heading className="font-extrabold text-center text-xl bg-blue-300 px-3 py-1 rounded-3xl">Your Information</heading>
+                                    <br></br>
+                                    <br></br>
                                     <p><strong>Student Name:</strong> {application.studentName}</p>
                                     <p><strong>Grade:</strong> {application.grade}</p>
                                     <p><strong>GPA:</strong> {application.gpa}</p>
                                     <p><strong>Resume:</strong> {application.resume}</p>
                                     <p><strong>Cover Letter:</strong> {application.coverLetter}</p>
+                                    <br></br>
+                                    <heading className="font-extrabold text-center text-xl bg-blue-300 px-3 py-1 rounded-3xl">Job Information</heading>
+                                    <br></br>
+                                    <br></br>
                                     <p><strong>Salary Range:</strong> {application.postingDetail.salaryRange}</p>
                                     <p><strong>Location:</strong> {application.postingDetail.location}</p>
                                     <p><strong>Description:</strong> {application.postingDetail.description}</p>
-                                    <p><strong>Status:</strong> {application.status === 'pending' ? 'Pending' : application.status === 'accepted' ? 'Accepted' : 'Rejected'}</p>
-                                    {application.status === 'accepted' && <p>Congratulations! You have been accepted to {application.postingDetail.title}.</p>}
-                                    {application.status === 'rejected' && <p>We are sorry to inform you that your application to {application.postingDetail.title} has been rejected.</p>}
+                                    <p><strong>Status:</strong> {application.status === 'pending' ? 'Pending' : application.status === 'accepted' ? 'Accepted' : application.status === 'rejected' ? 'Rejected' : "Invalid"}</p>
                                 </>
                             )}
                         </div>
