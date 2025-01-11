@@ -1,0 +1,8 @@
+[
+    { "id": "student1", "name": "John Doe", "password": "password1" },
+    { "id": "student2", "name": "Jane Smith", "password": "password2" },
+    { "id": "student3", "name": "Emily Davis", "password": "password3" },
+    { "id": "student4", "name": "Michael Johnson", "password": "password4" },
+    { "id": "student5", "name": "Sarah Wilson", "password": "password5" }
+  ]
+  

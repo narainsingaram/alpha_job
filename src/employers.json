@@ -1,0 +1,6 @@
+[
+    { "id": "employer1", "name": "Employer One", "password": "password1" },
+    { "id": "employer2", "name": "Employer Two", "password": "password2" },
+    { "id": "employer3", "name": "Employer Three", "password": "password3" }
+  ]
+  
