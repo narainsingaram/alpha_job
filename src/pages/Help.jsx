@@ -11,7 +11,7 @@ const Help = () => {
 
   return (
     <div className="container mx-auto py-8 ">
-    <h1 className="text-3xl font-bold mb-4 !ml-8">Business and Community Partner Management System - Help & Instructions</h1>
+    <h1 className="text-3xl font-bold mb-4 !ml-8">Business and Community Partner Management System - Help & Instructions <span className="text-red-500">(OLD)</span></h1>
       <div className="bg-slate-100 rounded-2xl m-4 p-6">
         <h2 className="text-xl font-bold mb-4">Table of Contents</h2>
 

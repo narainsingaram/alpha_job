@@ -6,6 +6,7 @@ import CreatePosting from './pages/CreatePosting';
 import Login from './components/Login';
 import BackendPanel from './pages/BackendPanel';
 import StudentApplications from './pages/StudentApplications';
+import Help from './pages/Help.jsx';
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
         <Route path="/student-login" element={<Login isEmployer={false} />} />
         <Route path="/backend" element={<BackendPanel />} />
         <Route path="/applications" element={<StudentApplications />} />
+        <Route path="/help" element={<Help />} />
       </Routes>
     </Router>
   );
