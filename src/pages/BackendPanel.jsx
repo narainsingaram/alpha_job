@@ -98,7 +98,7 @@ const BackendPanel = () => {
 
     return (
         <div className='p-4'>
-            <h1 className='text-5xl mb-4 font-bold text-center'>Backend Panel (Update Postings)</h1>
+            <h1 className='text-5xl mb-4 font-bold text-center'>Your Postings</h1>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 m-8 rounded-2xl'>
                 {postings.length > 0 ? (
                     postings.map((posting) => (
@@ -127,6 +127,7 @@ const BackendPanel = () => {
                     </div>
                 )}
             </div>
+            <h1 className='text-5xl mb-4 font-bold text-center'>Submitted Applications</h1>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 m-8 rounded-2xl'>
                 {applications.length > 0 ? (
                     applications.filter(application => postingIds.includes(application.postingId)) // Filter applications based on postingId
