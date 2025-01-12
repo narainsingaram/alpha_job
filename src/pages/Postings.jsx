@@ -141,7 +141,9 @@ const Home = () => {
 
     return (
       <div className="p-4">
-        <h1 className="text-5xl mb-4 font-bold text-center">AlphaJob</h1>
+<div class="text-3xl mb-4 font-extrabold text-center text-black bg-blue-300 px-8 py-1 rounded-3xl mx-auto max-w-max">
+    AlphaJob
+</div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 m-8 rounded-2xl">
           {postings.length > 0 ? (
             postings.map((posting) => (
