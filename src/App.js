@@ -6,6 +6,7 @@ import CreatePosting from './pages/CreatePosting';
 import Login from './components/Login';
 import BackendPanel from './pages/BackendPanel';
 import StudentApplications from './pages/StudentApplications';
+import ResumeAnalysis from './pages/ResumeAnalysis';
 import Help from './pages/Help.jsx';
 
 const App = () => {
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/student-login" element={<Login isEmployer={false} />} />
         <Route path="/backend" element={<BackendPanel />} />
         <Route path="/applications" element={<StudentApplications />} />
+        <Route path="/ai_analysis" element={<ResumeAnalysis />} />
         <Route path="/help" element={<Help />} />
       </Routes>
     </Router>
