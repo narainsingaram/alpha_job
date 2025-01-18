@@ -11,10 +11,12 @@
   @tailwind utilities;
 }
 
+html, body {
+  background-color: #eef2ff;
+}
 * {
   font-family: "Host Grotesk", sans-serif !important;
 }
-
 
 /* Hides the dropdown icon */
 .ui.dropdown .dropdown.icon {

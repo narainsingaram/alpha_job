@@ -73,6 +73,8 @@ const Home = () => {
         });
     };
 
+    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const studentId = Cookies.get('studentId');
@@ -149,10 +151,10 @@ const Home = () => {
             postings.map((posting) => (
               <div
                 key={posting.id}
-                className="p-4 border rounded-lg shadow-md flex flex-col justify-between"
+                className="p-6 bg-indigo-200/60 hover:bg-indigo-200 rounded-3xl duration-100 rounded-2xl shadow-lg flex flex-col justify-between"
               >
                 <div>
-                  <h2 className="text-2xl font-semibold">{posting.title}</h2>
+                  <h2 className="text-3xl text-indigo-800 font-extrabold">{posting.title}</h2>
                   <p>{posting.description}</p>
                   <p>Salary Range: {posting.salaryRange}</p>
                   <p>Location: {posting.location}</p>
