@@ -9,60 +9,93 @@ const Help = () => {
     setAdminMode(!adminMode);
   };
 
-  return (
-    <div className="container mx-auto py-8 ">
-    <h1 className="text-3xl font-bold mb-4 !ml-8">AlphaJob - School Job Management System  <span className="text-blue-500">(Info)</span></h1>
-      <div className="bg-slate-100 rounded-2xl m-4 p-6">
-        <h2 className="text-xl font-bold mb-4">Description</h2>
+return (
+<div class="relative">
+    <header class="absolute inset-x-0 top-0 z-10 w-full">
+        <div class="px-4 mx-auto sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 lg:h-20">
+                <div class="flex-shrink-0">
+                    <a className="" href="#" title="" class="flex">
+                        <span className="text-indigo-600 font-extrabold text-2xl"> AlphaJob</span>
+                    </a>
+                </div>
 
-        <div className="mb-4">
-          <p>Upon launching the application, you'll see a dashboard displaying all your business and community partners. The system is pre-loaded with at least 25 partners to get you started.</p>
+                <button type="button" class="inline-flex p-2 text-black transition-all duration-200 rounded-md lg:hidden focus:bg-gray-100 hover:bg-gray-100">
+                    <svg class="block w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+
+                    <svg class="hidden w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+
+                <div class="hidden ml-auto lg:flex lg:items-center lg:justify-center lg:space-x-10">
+                    <a href="#" title="" class="text-base font-semibold text-black transition-all duration-200 hover:text-opacity-80"> Features </a>
+
+                    <a href="#" title="" class="text-base font-semibold text-black transition-all duration-200 hover:text-opacity-80"> Solutions </a>
+
+                    <a href="#" title="" class="text-base font-semibold text-black transition-all duration-200 hover:text-opacity-80"> Resources </a>
+
+                    <a href="#" title="" class="text-base font-semibold text-black transition-all duration-200 hover:text-opacity-80"> Pricing </a>
+
+                    <a href="#" title="" class="inline-flex items-center justify-center px-5 py-2.5 text-base font-semibold transition-all duration-200 rounded-full bg-orange-500 text-white hover:bg-orange-600 focus:bg-orange-600" role="button"> Try for free </a>
+                </div>
+            </div>
         </div>
+    </header>
 
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-  <div className="bg-slate-100 rounded-2xl  hover:shadow-lg transition-shadow duration-300 p-6">
-    <h3 className="text-xl font-semibold text-gray-800 mb-3">Dashboard</h3>
-    <p className="text-gray-600">
-      Get a comprehensive overview of all your business partners. View key metrics, recent activities, and quick access to partner information.
-    </p>
-    <a href="/" className="text-blue-500 hover:text-blue-700 mt-4 inline-block">Explore Dashboard</a>
-  </div>
+    <section class="bg-indigo-100 overflow-hidden">
+        <div class="flex flex-col lg:flex-row lg:items-stretch lg:min-h-[800px]">
+            <div class="relative flex items-center justify-center w-full lg:order-2 lg:w-7/12">
+                <div class="absolute bottom-0 right-0 hidden lg:block">
+                    <img class="object-contain w-auto h-48" src="https://cdn.rareblocks.xyz/collection/celebration/images/hero/3/curved-lines.png" alt="" />
+                </div>
 
-  <div className="bg-slate-100 rounded-2xl  hover:shadow-lg transition-shadow duration-300 p-6">
-    <h3 className="text-xl font-semibold text-gray-800 mb-3">Graphs</h3>
-    <p className="text-gray-600">
-      Visualize your partner data with interactive charts and graphs. Analyze trends, compare sectors, and gain valuable insights.
-    </p>
-    <a href="graph" className="text-blue-500 hover:text-blue-700 mt-4 inline-block">View Graphs</a>
-  </div>
+                <div class="relative px-4 pt-24 pb-16 text-center sm:px-6 md:px-24 2xl:px-32 lg:py-24 lg:text-left">
+                    <h1 class="text-4xl font-bold text-black sm:text-6xl xl:text-8xl">
+                        Get it done.<br />
+                        Fast, Easy.
+                    </h1>
+                    <p class="mt-8 text-xl text-black">We help you to make your remote work life easier. Build a distruction free working experience.</p>
 
-  <div className="bg-slate-100 rounded-2xl  hover:shadow-lg transition-shadow duration-300 p-6">
-    <h3 className="text-xl font-semibold text-gray-800 mb-3">Map</h3>
-    <p className="text-gray-600">
-      Explore the geographical distribution of your partners. Identify regional clusters and potential areas for expansion.
-    </p>
-    <a href="/map" className="text-blue-500 hover:text-blue-700 mt-4 inline-block">Open Map</a>
-  </div>
 
-  <div className="bg-slate-100 rounded-2xl  hover:shadow-lg transition-shadow duration-300 p-6">
-    <h3 className="text-xl font-semibold text-gray-800 mb-3">Q&A AI Chatbot</h3>
-    <p className="text-gray-600">
-      Get instant answers to your questions about partners or the system. Our AI-powered chatbot is here to assist you 24/7.
-    </p>
-    <a href="/ai" className="text-blue-500 hover:text-blue-700 mt-4 inline-block">Chat Now</a>
-  </div>
 
-  <div className="bg-slate-100 rounded-2xl  hover:shadow-lg transition-shadow duration-300 p-6">
-    <h3 className="text-xl font-semibold text-gray-800 mb-3">Instructions/Guide</h3>
-    <p className="text-gray-600">
-      New to the system? Check out our comprehensive guide to learn how to make the most of all features and functionalities.
-    </p>
-    <a href="#" className="text-blue-500 hover:text-blue-700 mt-4 inline-block">Read Guide (this page)</a>
-  </div>
+                    <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-4 mt-4 font-semibold text-white transition-all duration-200 bg-indigo-500 border border-transparent rounded-full sm:w-auto sm:ml-4 sm:mt-0 hover:bg-orange-600 focus:bg-orange-600">
+                        Try 14 days free
+                    </button>
+
+                    <p class="mt-5 text-base text-black">Instant access . No credit card required</p>
+                </div>
+
+                <div class="absolute right-0 z-10 -bottom-16 lg:top-24 lg:-left-20">
+                    <img class="w-32 h-32 md:w-40 md:h-40" src="https://cdn.rareblocks.xyz/collection/celebration/images/hero/3/circular-text.png" alt="" />
+                </div>
+            </div>
+
+            <div class="relative w-full overflow-hidden lg:order-1 h-96 lg:h-auto lg:w-5/12">
+                <div class="absolute inset-0">
+                    <img class="object-cover w-full h-full scale-150" src="https://cdn.rareblocks.xyz/collection/celebration/images/hero/3/man-working-on-laptop.jpg" alt="" />
+                </div>
+
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+
+                <div class="absolute bottom-0 left-0">
+                    <div class="p-4 sm:p-6 lg:p-8">
+                        <div class="flex items-center">
+                            <svg class="w-10 h-10 text-orange-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" />
+                            </svg>
+                            <h2 class="font-bold text-white text-7xl ml-2.5">395</h2>
+                        </div>
+                        <p class="max-w-xs mt-1.5 text-xl text-white">Professionals have organized their desk via PostCra</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
 
-    </div>
   );
 };
 
