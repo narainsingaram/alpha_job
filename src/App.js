@@ -8,6 +8,7 @@ import BackendPanel from './pages/BackendPanel';
 import StudentApplications from './pages/StudentApplications';
 import ResumeAnalysis from './pages/ResumeAnalysis';
 import Help from './pages/Help.jsx';
+import AI from './pages/AI.jsx';
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
         <Route path="/backend" element={<BackendPanel />} />
         <Route path="/applications" element={<StudentApplications />} />
         <Route path="/ai_analysis" element={<ResumeAnalysis />} />
+        <Route path="/AI" element={<AI />} />
         <Route path="/help" element={<Help />} />
       </Routes>
     </Router>
