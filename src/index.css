@@ -11,6 +11,9 @@
   @tailwind utilities;
 }
 
+html, body {
+  background-color: #eef2ff;
+}
 * {
   font-family: "Host Grotesk", sans-serif !important;
 }

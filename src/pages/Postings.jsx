@@ -149,7 +149,7 @@ const Home = () => {
             postings.map((posting) => (
               <div
                 key={posting.id}
-                className="p-6 bg-indigo-100 hover:bg-indigo-200 rounded-3xl duration-100 rounded-2xl shadow-lg flex flex-col justify-between"
+                className="p-6 bg-indigo-200/60 hover:bg-indigo-200 rounded-3xl duration-100 rounded-2xl shadow-lg flex flex-col justify-between"
               >
                 <div>
                   <h2 className="text-3xl text-indigo-800 font-extrabold">{posting.title}</h2>
