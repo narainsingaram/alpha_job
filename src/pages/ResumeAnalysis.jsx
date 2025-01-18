@@ -1,116 +1,148 @@
-import React, { useState } from "react";
-import * as pdfjsLib from "pdfjs-dist";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import React, { useState } from 'react';
+import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/generative-ai';
+import pdfToText from 'react-pdftotext';
 
-const ResumeAIAnalysis = () => {
-  const [file, setFile] = useState(null);
-  const [feedback, setFeedback] = useState("");
+function PDFParserReact() {
   const [loading, setLoading] = useState(false);
+  const [chatHistory, setChatHistory] = useState([]);
+  const [resumeText, setResumeText] = useState(''); // State to store the resume text
 
-  const extractTextFromPDF = async (file) => {
-    try {
-      const arrayBuffer = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-
-      let text = "";
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const textContent = await page.getTextContent();
-        const pageText = textContent.items.map((item) => item.str).join(" ");
-        text += pageText + " ";
-      }
-
-      return text.trim();
-    } catch (error) {
-      console.error("Error extracting text from PDF: ", error);
-      throw new Error("Failed to extract text from PDF");
-    }
-  };
-
-  const handleFileChange = (event) => {
-    const uploadedFile = event.target.files[0];
-    if (uploadedFile.size > 5 * 1024 * 1024) {
-      alert("File size exceeds the 5 MB limit. Please upload a smaller file.");
-      return;
-    }
-    setFile(uploadedFile);
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    if (!file) {
-      alert("Please upload a PDF file");
-      return;
-    }
-
+  // Function to send extracted text to Gemini AI for feedback generation
+  const generateFeedback = async (content) => {
     setLoading(true);
-    setFeedback("");
+
+    const MODEL_NAME = 'gemini-pro';
+    const API_KEY = 'AIzaSyBrFLwWvr-WPscoHu7O-shXHSIZnlP4FNs'; // Replace with your actual API key
+
+    const genAI = new GoogleGenerativeAI(API_KEY);
+    const model = genAI.getGenerativeModel({ model: MODEL_NAME });
+
+    // Define input context for the AI (e.g., resume analysis instructions)
+    const context = `
+      You are an AI resume reviewer. Please analyze the following resume and provide feedback. Focus on the following aspects:
+      1. Structure and readability
+      2. Key skills and qualifications
+      3. Relevance and clarity of work experience
+      4. Overall presentation and professionalism
+      5. Any areas for improvement or potential omissions
+
+      **DO NOT INCLUDE ORIGINAL RESUME IN YOUR RESPONSE**
+    `;
+
+    const generationConfig = {
+      temperature: 0.7,
+      topK: 10,
+      topP: 0.9,
+      maxOutputTokens: 1024,
+    };
+
+    const safetySettings = [
+      {
+        category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+        threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+      },
+    ];
 
     try {
-      const extractedText = await extractTextFromPDF(file);
-      console.log("Extracted Text: ", extractedText);
-
-      const apiKey = "AIzaSyBrFLwWvr-WPscoHu7O-shXHSIZnlP4FNs"; // Replace with your key or use .env
-      const genAI = new GoogleGenerativeAI(apiKey);
-
-      const model = genAI.getGenerativeModel({
-        model: "gemini-1.5-pro",
-      });
-
-      const generationConfig = {
-        temperature: 1,
-        topP: 0.95,
-        topK: 40,
-        maxOutputTokens: 8192,
-        responseMimeType: "text/plain",
-      };
-
-      const chatSession = model.startChat({
+      const result = await model.generateContent({
+        contents: [
+          { role: 'user', parts: [{ text: context }] },  // Use 'user' role for context
+          { role: 'user', parts: [{ text: content }] },  // User's resume content
+        ],
         generationConfig,
-        history: [],
+        safetySettings,
       });
 
-      const result = await chatSession.sendMessage(
-        `Analyze this resume/cover letter and provide specific feedback to improve it: ${extractedText}`
-      );
+      const response = result.response.text();
 
-      console.log("API Response: ", result);
-      setFeedback(result.response.text);
-    } catch (error) {
-      console.error("Error analyzing resume: ", error);
-      setFeedback("An error occurred while processing your resume. Please try again.");
+      setChatHistory((prevHistory) => [
+        ...prevHistory,
+        {
+          id: Date.now() + 1,
+          role: 'bot',
+          text: response, // Only save and display the AI feedback
+        },
+      ]);
     } finally {
       setLoading(false);
     }
   };
 
+  // Function to handle PDF file upload and extract text
+  const extractText = (event) => {
+    const file = event.target.files[0];
+
+    if (file) {
+      pdfToText(file)
+        .then((text) => {
+          setResumeText(text); // Set extracted text as preview
+          generateFeedback(text); // Send the extracted text to AI for feedback
+        })
+        .catch((error) => {
+          console.error('Failed to extract text from pdf:', error);
+          alert('An error occurred while extracting the text.');
+        });
+    }
+  };
+
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <h1>Resume AI Analysis</h1>
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: "10px" }}>
-          <label htmlFor="fileInput">Upload your Resume or Cover Letter (PDF only): </label>
+    <div className="App" style={{ display: 'flex', flexDirection: 'row', padding: '20px' }}>
+      <div style={{ flex: 1, marginRight: '20px' }}>
+        <header className="App-header">
+          <h1>Upload Your Resume for AI Feedback</h1>
           <input
             type="file"
-            id="fileInput"
             accept="application/pdf"
-            onChange={handleFileChange}
+            onChange={extractText}
+            className="file-input"
+          />
+        </header>
+
+        {loading && (
+          <div className="loading-indicator">
+            <p>Loading...</p>
+          </div>
+        )}
+
+        <div style={{ marginTop: '20px' }}>
+          <h2>Resume Keyword Preview</h2>
+          <textarea
+            className='bg-slate-100 rounded-2xl  hover:shadow-lg'
+            value={resumeText}
+            readOnly
+            rows={15}
+            style={{
+              width: '100%',
+              height: '300px',
+              padding: '10px',
+              borderRadius: '5px',
+              border: '1px solid #ddd',
+              fontFamily: 'Arial, sans-serif',
+            }}
           />
         </div>
-        <button type="submit" style={{ padding: "10px 20px" }}>
-          {loading ? "Analyzing..." : "Submit"}
-        </button>
-      </form>
+      </div>
 
-      {feedback && (
-        <div style={{ marginTop: "20px", border: "1px solid #ccc", padding: "10px" }}>
-          <h2>Feedback</h2>
-          <p>{feedback}</p>
-        </div>
-      )}
+      <div style={{ flex: 1 }}>
+        {chatHistory.length > 0 && (
+          <div className="chat-history bg-indigo-100 rounded-2xl p-6">
+            <h2 className="text-xl text-indigo-900 font-bold mb-4">AI Feedback</h2>
+            {chatHistory.map((chatItem) => (
+              <div
+                key={chatItem.id}
+                className={`chat-item ${chatItem.role === 'bot' ? 'chat-start' : 'chat-end'}`}
+                style={{ marginBottom: '15px' }}
+              >
+                <div className="chat-text text-indigo-800" style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
+                  {chatItem.text}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
-};
+}
 
-export default ResumeAIAnalysis;
+export default PDFParserReact;

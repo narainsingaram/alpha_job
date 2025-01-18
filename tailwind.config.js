@@ -1,15 +1,16 @@
-/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    // Specify the paths to all of the template files in your project
-    './src/**/*.{html,js,ts,jsx,tsx}', // Adjust according to your project structure
+    './src/**/*.{html,js,ts,jsx,tsx}',
   ],
-  daisyui: {
-  },
+  daisyui: {},
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        'gradient-blue': 'linear-gradient(to top, #00c6fb 0%, #005bea 100%)',
+      },
+    },
   },
-  darkMode: 'class', // or 'media' if you prefer
+  darkMode: 'class',
   plugins: [
     require('flowbite/plugin'),
     require('daisyui'),
