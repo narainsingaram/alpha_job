@@ -94,7 +94,6 @@ function PDFParserReact() {
             type="file"
             accept="application/pdf"
             onChange={extractText}
-            className="file-input"
           />
         </header>
 
@@ -107,7 +106,7 @@ function PDFParserReact() {
         <div style={{ marginTop: '20px' }}>
           <h2>Resume Keyword Preview</h2>
           <textarea
-            className='bg-slate-100 rounded-2xl  hover:shadow-lg'
+            className='rounded-2xl hover:shadow-lg'
             value={resumeText}
             readOnly
             rows={15}

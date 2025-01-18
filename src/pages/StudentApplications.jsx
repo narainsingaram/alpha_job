@@ -115,7 +115,7 @@ const StudentApplications = () => {
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 m-8 rounded-2xl'>
                 {applications.length > 0 ? (
                     applications.map((application) => (
-                        <div key={application.id} className={`p-4 rounded-2xl border ${application.status === 'accepted' ? 'bg-emerald-50' : application.status === 'rejected' ? 'bg-rose-50' : 'bg-amber-50'}`}>
+                        <div key={application.id} className={`p-4 rounded-2xl shadow-lg ${application.status === 'accepted' ? 'bg-emerald-50' : application.status === 'rejected' ? 'bg-rose-50' : 'bg-amber-50'}`}>
                             {application.postingDetail && (
                                 <>
                                     <h2 className={`text-2xl font-semibold ${application.status === 'accepted' ? 'text-green-500' : application.status === 'rejected' ? 'text-red-500' : 'text-yellow-500'}`}>
