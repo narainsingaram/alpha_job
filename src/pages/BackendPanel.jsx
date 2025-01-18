@@ -118,7 +118,7 @@ const BackendPanel = () => {
                     <div className="grid grid-cols-1 gap-4">
                         {postings.length > 0 ? (
                             postings.map((posting) => (
-                                <div key={posting.id} className="p-4 border rounded-lg shadow-md">
+                                <div key={posting.id} className="p-6 bg-indigo-200/75 rounded-2xl">
                                     <p><strong>Title:</strong> {posting.title || "N/A"}</p>
                                     <p><strong>Location:</strong> {posting.location || "N/A"}</p>
                                     <p><strong>Description:</strong> {posting.description || "N/A"}</p>
@@ -160,7 +160,7 @@ const BackendPanel = () => {
                             applications
                                 .filter((application) => postingIds.includes(application.postingId))
                                 .map((application) => (
-                                    <div key={application.id} className="p-4 border rounded-lg shadow-md">
+                                    <div key={application.id} className="p-6 bg-indigo-200/75 rounded-2xl">
                                         <p><strong>Student Name:</strong> {application.studentName || "N/A"}</p>
                                         <p><strong>Grade:</strong> {application.grade || "N/A"}</p>
                                         <p><strong>Status:</strong> {application.status || "Pending"}</p>
@@ -194,7 +194,7 @@ const BackendPanel = () => {
             {selectedApplication && (
                 <div className="modal modal-open modal-overlay">
                     <div className="modal-box">
-                        <h3 className="font-bold text-lg">Application Details</h3>
+                        <h1 className="font-extrabold text-3xl">Application Details</h1>
                         <p><strong>Student Name:</strong> {selectedApplication.studentName || "N/A"}</p>
                         <p><strong>Grade:</strong> {selectedApplication.grade || "N/A"}</p>
                         <p><strong>GPA:</strong> {selectedApplication.gpa || "N/A"}</p>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { db } from "../firebase";
-import { collection, onSnapshot, addDoc } from 'firebase/firestore';
+import { collection, onSnapshot, addDoc, serverTimestamp } from 'firebase/firestore';
 import Spinner from '../components/Spinner';
 import Cookies from 'js-cookie';
 
@@ -21,7 +21,9 @@ const Home = () => {
         title: '',
         description: '',
         salaryRange: '',
-        location: ''
+        location: '',
+        field: '',
+        deadline: ''
     });
     const [searchQuery, setSearchQuery] = useState('');
     const [sortField, setSortField] = useState('');
@@ -77,7 +79,6 @@ const Home = () => {
         });
     };
 
-    
     const handleSubmit = async (e) => {
         e.preventDefault();
         const studentId = Cookies.get('studentId');
@@ -122,7 +123,8 @@ const Home = () => {
         try {
             await addDoc(collection(db, "postings"), {
                 ...postingFormData,
-                employerId
+                employerId,
+                dateAdded: serverTimestamp(),
             });
             alert('Job posting created successfully!');
             setShowCreatePostingForm(false);
@@ -130,7 +132,9 @@ const Home = () => {
                 title: '',
                 description: '',
                 salaryRange: '',
-                location: ''
+                location: '',
+                field: '',
+                deadline: ''
             });
         } catch (error) {
             console.error("Error creating job posting:", error);
@@ -224,6 +228,8 @@ const Home = () => {
                                 <p>{posting.description}</p>
                                 <p>Salary Range: {posting.salaryRange}</p>
                                 <p>Location: {posting.location}</p>
+                                <p>Field: {posting.field}</p>
+                                <p>Deadline: {new Date(posting.deadline?.seconds * 1000).toLocaleDateString()}</p>
                             </div>
                             <button
                                 className="btn btn-primary self-end mt-4"
@@ -424,6 +430,40 @@ const Home = () => {
                                     name="location"
                                     type="text"
                                     value={postingFormData.location}
+                                    onChange={handlePostingChange}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label
+                                    className="block text-gray-700 text-sm font-bold mb-2"
+                                    htmlFor="field"
+                                >
+                                    Field
+                                </label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="field"
+                                    name="field"
+                                    type="text"
+                                    value={postingFormData.field}
+                                    onChange={handlePostingChange}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label
+                                    className="block text-gray-700 text-sm font-bold mb-2"
+                                    htmlFor="deadline"
+                                >
+                                    Deadline
+                                </label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="deadline"
+                                    name="deadline"
+                                    type="date"
+                                    value={postingFormData.deadline}
                                     onChange={handlePostingChange}
                                     required
                                 />
