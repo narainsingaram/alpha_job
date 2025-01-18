@@ -13,6 +13,7 @@ const BackendPanel = () => {
     const [postingIds, setPostingIds] = useState([]);
     const [selectedApplication, setSelectedApplication] = useState(null);
     const [alert, setAlert] = useState(null); // For DaisyUI alerts
+    const [editingPosting, setEditingPosting] = useState(null);
     const employerId = Cookies.get('employerId');
 
     useEffect(() => {
@@ -78,6 +79,37 @@ const BackendPanel = () => {
         setAlert(null);
     };
 
+    const handleEditPosting = (posting) => {
+        setEditingPosting(posting);
+    };
+
+    const handlePostingChange = (e) => {
+        const { name, value } = e.target;
+        setEditingPosting({
+            ...editingPosting,
+            [name]: value
+        });
+    };
+
+    const handleUpdatePosting = async (e) => {
+        e.preventDefault();
+        try {
+            await updateDoc(doc(db, "postings", editingPosting.id), {
+                title: editingPosting.title,
+                description: editingPosting.description,
+                salaryRange: editingPosting.salaryRange,
+                location: editingPosting.location,
+                field: editingPosting.field,
+                deadline: editingPosting.deadline
+            });
+            setPostings(postings.map(posting => posting.id === editingPosting.id ? editingPosting : posting));
+            setEditingPosting(null);
+            setAlert({ type: "success", message: "Posting updated successfully" });
+        } catch (err) {
+            setAlert({ type: "error", message: "Failed to update posting" });
+        }
+    };
+
     useEffect(() => {
         const handleKeyDown = (e) => {
             if (e.key === "Escape") {
@@ -125,9 +157,7 @@ const BackendPanel = () => {
                                     <div className="flex justify-between mt-2">
                                         <button
                                             className="btn btn-info"
-                                            onClick={() => {
-                                                // Edit posting logic
-                                            }}
+                                            onClick={() => handleEditPosting(posting)}
                                         >
                                             Edit
                                         </button>
@@ -234,6 +264,114 @@ const BackendPanel = () => {
                                 Close
                             </button>
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {/* DaisyUI Modal for Editing Posting */}
+            {editingPosting && (
+                <div className="modal modal-open modal-overlay">
+                    <div className="modal-box">
+                        <h1 className="font-extrabold text-3xl">Edit Posting</h1>
+                        <form onSubmit={handleUpdatePosting}>
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
+                                    Job Title
+                                </label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="title"
+                                    name="title"
+                                    type="text"
+                                    value={editingPosting.title}
+                                    onChange={handlePostingChange}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+                                    Job Description
+                                </label>
+                                <textarea
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="description"
+                                    name="description"
+                                    value={editingPosting.description}
+                                    onChange={handlePostingChange}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="salaryRange">
+                                    Salary Range
+                                </label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="salaryRange"
+                                    name="salaryRange"
+                                    type="text"
+                                    value={editingPosting.salaryRange}
+                                    onChange={handlePostingChange}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="location">
+                                    Location
+                                </label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="location"
+                                    name="location"
+                                    type="text"
+                                    value={editingPosting.location}
+                                    onChange={handlePostingChange}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="field">
+                                    Field
+                                </label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="field"
+                                    name="field"
+                                    type="text"
+                                    value={editingPosting.field}
+                                    onChange={handlePostingChange}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="deadline">
+                                    Deadline
+                                </label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="deadline"
+                                    name="deadline"
+                                    type="date"
+                                    value={editingPosting.deadline}
+                                    onChange={handlePostingChange}
+                                    required
+                                />
+                            </div>
+                            <div className="modal-action">
+                                <button
+                                    className="btn btn-primary"
+                                    type="submit"
+                                >
+                                    Update Posting
+                                </button>
+                                <button
+                                    className="btn"
+                                    onClick={() => setEditingPosting(null)}
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             )}

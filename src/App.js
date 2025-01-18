@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import Home from './pages/Postings.jsx';
 import CreatePosting from './pages/CreatePosting';
@@ -11,9 +11,11 @@ import Help from './pages/Help.jsx';
 import AI from './pages/AI.jsx';
 
 const App = () => {
+  const location = useLocation();
+
   return (
-    <Router>
-      <NavBar />
+    <>
+      {location.pathname !== '/help' && <NavBar />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/postings" element={<Home />} />
@@ -26,11 +28,16 @@ const App = () => {
         <Route path="/AI" element={<AI />} />
         <Route path="/help" element={<Help />} />
       </Routes>
-    </Router>
+    </>
   );
 };
 
-export default App;
+const AppWrapper = () => (
+  <Router>
+    <App />
+  </Router>
+);
+
+export default AppWrapper;
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.4.1/flowbite.min.js"></script>
-  
