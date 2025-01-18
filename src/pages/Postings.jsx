@@ -77,6 +77,7 @@ const Home = () => {
         });
     };
 
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         const studentId = Cookies.get('studentId');
@@ -92,7 +93,8 @@ const Home = () => {
                 grade: formData.grade,
                 gpa: formData.gpa,
                 resume: formData.resume.name,
-                coverLetter: formData.coverLetter.name
+                coverLetter: formData.coverLetter.name,
+                status: "pending"
             });
             alert('Application submitted successfully!');
             setShowForm(null);

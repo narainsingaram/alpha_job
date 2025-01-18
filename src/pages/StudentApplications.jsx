@@ -3,6 +3,7 @@ import { db } from "../firebase";
 import { collection, query, where, onSnapshot, getDoc, doc, addDoc, updateDoc } from 'firebase/firestore';
 import Spinner from '../components/Spinner';
 import Cookies from 'js-cookie';
+import InterviewPrepModal from './AI'; // Import the modal component
 
 const StudentApplications = () => {
     const [applications, setApplications] = useState([]);
@@ -16,6 +17,7 @@ const StudentApplications = () => {
     const [showForm, setShowForm] = useState(null); // Added
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [selectedApplication, setSelectedApplication] = useState(null); // Added
     const studentId = Cookies.get('studentId');
 
     useEffect(() => {
@@ -138,7 +140,15 @@ const StudentApplications = () => {
                                     <p><strong>Salary Range:</strong> {application.postingDetail.salaryRange}</p>
                                     <p><strong>Location:</strong> {application.postingDetail.location}</p>
                                     <p><strong>Description:</strong> {application.postingDetail.description}</p>
-                                    <p><strong>Status:</strong> {application.status === 'pending' ? 'Pending' : application.status === 'accepted' ? 'Accepted' : application.status === 'rejected' ? 'Rejected' : "Invalid"}</p>
+                                    <p><strong>Status:</strong> {application.status === 'pending' ? 'Pending' : application.status === 'accepted' ? 'Accepted' : application.status === 'rejected' ? 'Rejected' : 'N/A'}</p>
+                                    {application.status === 'pending' && (
+                                        <button
+                                            onClick={() => setSelectedApplication(application)}
+                                            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600"
+                                        >
+                                            Prepare for Interview
+                                        </button>
+                                    )}
                                 </>
                             )}
                         </div>
@@ -149,6 +159,12 @@ const StudentApplications = () => {
                     </div>
                 )}
             </div>
+            {selectedApplication && (
+                <InterviewPrepModal
+                    application={selectedApplication}
+                    onClose={() => setSelectedApplication(null)}
+                />
+            )}
         </div>
     );
 };
