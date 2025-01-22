@@ -14,6 +14,12 @@ const BackendPanel = () => {
     const [selectedApplication, setSelectedApplication] = useState(null);
     const [alert, setAlert] = useState(null); // For DaisyUI alerts
     const [editingPosting, setEditingPosting] = useState(null);
+    const [postingSearchQuery, setPostingSearchQuery] = useState('');
+    const [postingSortField, setPostingSortField] = useState('');
+    const [postingSortOrder, setPostingSortOrder] = useState('asc');
+    const [applicationSearchQuery, setApplicationSearchQuery] = useState('');
+    const [applicationSortField, setApplicationSortField] = useState('');
+    const [applicationSortOrder, setApplicationSortOrder] = useState('asc');
     const employerId = Cookies.get('employerId');
 
     useEffect(() => {
@@ -132,6 +138,45 @@ const BackendPanel = () => {
         };
     }, []);
 
+    const filteredPostings = postings
+        .filter(posting =>
+            posting.title.toLowerCase().includes(postingSearchQuery.toLowerCase()) ||
+            posting.description.toLowerCase().includes(postingSearchQuery.toLowerCase()) ||
+            posting.location.toLowerCase().includes(postingSearchQuery.toLowerCase())
+        )
+        .sort((a, b) => {
+            if (postingSortField === 'title') {
+                return postingSortOrder === 'asc' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title);
+            }
+            if (postingSortField === 'salaryRange') {
+                return postingSortOrder === 'asc' ? a.salaryRange.localeCompare(b.salaryRange) : b.salaryRange.localeCompare(a.salaryRange);
+            }
+            if (postingSortField === 'location') {
+                return postingSortOrder === 'asc' ? a.location.localeCompare(b.location) : b.location.localeCompare(a.location);
+            }
+            return 0;
+        });
+
+    const filteredApplications = applications
+        .filter(application =>
+            application.studentName.toLowerCase().includes(applicationSearchQuery.toLowerCase()) ||
+            application.grade.toLowerCase().includes(applicationSearchQuery.toLowerCase()) ||
+            application.status.toLowerCase().includes(applicationSearchQuery.toLowerCase())
+        )
+        .filter(application => postingIds.includes(application.postingId))
+        .sort((a, b) => {
+            if (applicationSortField === 'studentName') {
+                return applicationSortOrder === 'asc' ? a.studentName.localeCompare(b.studentName) : b.studentName.localeCompare(a.studentName);
+            }
+            if (applicationSortField === 'grade') {
+                return applicationSortOrder === 'asc' ? a.grade.localeCompare(b.grade) : b.grade.localeCompare(a.grade);
+            }
+            if (applicationSortField === 'status') {
+                return applicationSortOrder === 'asc' ? a.status.localeCompare(b.status) : b.status.localeCompare(a.status);
+            }
+            return 0;
+        });
+
     if (loading) {
         return <Spinner />;
     }
@@ -147,9 +192,39 @@ const BackendPanel = () => {
                 {/* Your Postings Section */}
                 <div className="px-8 py-2 border-r border-gray-100">
                     <h2 className="text-3xl font-bold mb-4 text-center">Your Postings</h2>
+                    <div className="mb-4 flex justify-between items-center">
+                        <input
+                            type="text"
+                            placeholder="Search postings..."
+                            value={postingSearchQuery}
+                            onChange={(e) => setPostingSearchQuery(e.target.value)}
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4"
+                        />
+                        <div className="flex items-center">
+                            <label className="mr-2">Sort by:</label>
+                            <select
+                                value={postingSortField}
+                                onChange={(e) => setPostingSortField(e.target.value)}
+                                className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4"
+                            >
+                                <option value="">Select</option>
+                                <option value="title">Title</option>
+                                <option value="salaryRange">Salary Range</option>
+                                <option value="location">Location</option>
+                            </select>
+                            <select
+                                value={postingSortOrder}
+                                onChange={(e) => setPostingSortOrder(e.target.value)}
+                                className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4"
+                            >
+                                <option value="asc">Ascending</option>
+                                <option value="desc">Descending</option>
+                            </select>
+                        </div>
+                    </div>
                     <div className="grid grid-cols-1 gap-4">
-                        {postings.length > 0 ? (
-                            postings.map((posting) => (
+                        {filteredPostings.length > 0 ? (
+                            filteredPostings.map((posting) => (
                                 <div key={posting.id} className="p-6 bg-indigo-200/75 rounded-2xl">
                                     <p><strong>Title:</strong> {posting.title || "N/A"}</p>
                                     <p><strong>Location:</strong> {posting.location || "N/A"}</p>
@@ -185,23 +260,51 @@ const BackendPanel = () => {
                 {/* Submitted Applications Section */}
                 <div className="px-8 py-2">
                     <h2 className="text-3xl font-bold mb-4 text-center">Submitted Applications</h2>
+                    <div className="mb-4 flex justify-between items-center">
+                        <input
+                            type="text"
+                            placeholder="Search applications..."
+                            value={applicationSearchQuery}
+                            onChange={(e) => setApplicationSearchQuery(e.target.value)}
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4"
+                        />
+                        <div className="flex items-center">
+                            <label className="mr-2">Sort by:</label>
+                            <select
+                                value={applicationSortField}
+                                onChange={(e) => setApplicationSortField(e.target.value)}
+                                className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4"
+                            >
+                                <option value="">Select</option>
+                                <option value="studentName">Student Name</option>
+                                <option value="grade">Grade</option>
+                                <option value="status">Status</option>
+                            </select>
+                            <select
+                                value={applicationSortOrder}
+                                onChange={(e) => setApplicationSortOrder(e.target.value)}
+                                className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4"
+                            >
+                                <option value="asc">Ascending</option>
+                                <option value="desc">Descending</option>
+                            </select>
+                        </div>
+                    </div>
                     <div className="grid grid-cols-1 gap-4 ">
-                        {applications.length > 0 ? (
-                            applications
-                                .filter((application) => postingIds.includes(application.postingId))
-                                .map((application) => (
-                                    <div key={application.id} className="p-6 bg-indigo-200/75 rounded-2xl">
-                                        <p><strong>Student Name:</strong> {application.studentName || "N/A"}</p>
-                                        <p><strong>Grade:</strong> {application.grade || "N/A"}</p>
-                                        <p><strong>Status:</strong> {application.status || "Pending"}</p>
-                                        <button
-                                            className="btn btn-primary"
-                                            onClick={() => setSelectedApplication(application)}
-                                        >
-                                            View Fullscreen
-                                        </button>
-                                    </div>
-                                ))
+                        {filteredApplications.length > 0 ? (
+                            filteredApplications.map((application) => (
+                                <div key={application.id} className="p-6 bg-indigo-200/75 rounded-2xl">
+                                    <p><strong>Student Name:</strong> {application.studentName || "N/A"}</p>
+                                    <p><strong>Grade:</strong> {application.grade || "N/A"}</p>
+                                    <p><strong>Status:</strong> {application.status || "Pending"}</p>
+                                    <button
+                                        className="btn btn-primary"
+                                        onClick={() => setSelectedApplication(application)}
+                                    >
+                                        View Fullscreen
+                                    </button>
+                                </div>
+                            ))
                         ) : (
                             <div className="p-4 border rounded-lg shadow-md">
                                 <h2 className="text-2xl font-semibold">No applications found</h2>

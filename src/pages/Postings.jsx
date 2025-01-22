@@ -23,7 +23,8 @@ const Home = () => {
         salaryRange: '',
         location: '',
         field: '',
-        deadline: ''
+        deadline: '',
+        hashtags: ''
     });
     const [searchQuery, setSearchQuery] = useState('');
     const [sortField, setSortField] = useState('');
@@ -125,6 +126,7 @@ const Home = () => {
                 ...postingFormData,
                 employerId,
                 dateAdded: serverTimestamp(),
+                hashtags: postingFormData.hashtags.split(',').map(tag => tag.trim())
             });
             alert('Job posting created successfully!');
             setShowCreatePostingForm(false);
@@ -134,7 +136,8 @@ const Home = () => {
                 salaryRange: '',
                 location: '',
                 field: '',
-                deadline: ''
+                deadline: '',
+                hashtags: ''
             });
         } catch (error) {
             console.error("Error creating job posting:", error);
@@ -230,6 +233,13 @@ const Home = () => {
                                 <p>Location: {posting.location}</p>
                                 <p>Field: {posting.field}</p>
                                 <p>Deadline: {new Date(posting.deadline?.seconds * 1000).toLocaleDateString()}</p>
+                                <div className="flex flex-wrap mt-2">
+                                    {posting.hashtags && posting.hashtags.map((tag, index) => (
+                                        <span key={index} className="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                            #{tag}
+                                        </span>
+                                    ))}
+                                </div>
                             </div>
                             <button
                                 className="btn btn-primary self-end mt-4"
@@ -464,6 +474,23 @@ const Home = () => {
                                     name="deadline"
                                     type="date"
                                     value={postingFormData.deadline}
+                                    onChange={handlePostingChange}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label
+                                    className="block text-gray-700 text-sm font-bold mb-2"
+                                    htmlFor="hashtags"
+                                >
+                                    Hashtags (comma-separated)
+                                </label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="hashtags"
+                                    name="hashtags"
+                                    type="text"
+                                    value={postingFormData.hashtags}
                                     onChange={handlePostingChange}
                                     required
                                 />
