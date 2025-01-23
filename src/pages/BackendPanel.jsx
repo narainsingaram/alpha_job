@@ -4,6 +4,10 @@ import { collection, query, where, onSnapshot, doc, deleteDoc, updateDoc } from 
 import Spinner from '../components/Spinner';
 import Cookies from 'js-cookie';
 import withAdminAuth from '../utils/hoc/withAdminAuth.js';
+import { Bar, Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
 const BackendPanel = () => {
     const [postings, setPostings] = useState([]);
@@ -177,6 +181,43 @@ const BackendPanel = () => {
             return 0;
         });
 
+    const gradeDistributionData = {
+        labels: ['Grade 11', 'Grade 12', 'Grade 13', 'Grade 14'],
+        datasets: [
+            {
+                label: 'Grade Distribution',
+                data: ['Grade 11', 'Grade 12', 'Grade 13', 'Grade 14'].map(grade =>
+                    applications.filter(app => app.grade === grade).length
+                ),
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+            },
+        ],
+    };
+
+    const statusDistributionData = {
+        labels: ['Accepted', 'Pending', 'Rejected'],
+        datasets: [
+            {
+                label: 'Status Distribution',
+                data: ['accepted', 'pending', 'rejected'].map(status =>
+                    applications.filter(app => app.status === status).length
+                ),
+                backgroundColor: ['#36A2EB', '#FFCE56', '#FF6384'],
+            },
+        ],
+    };
+
+    const postingsData = {
+        labels: ['Postings'],
+        datasets: [
+            {
+                label: 'Number of Postings',
+                data: [postings.length],
+                backgroundColor: ['#FF6384'],
+            },
+        ],
+    };
+
     if (loading) {
         return <Spinner />;
     }
@@ -188,6 +229,21 @@ const BackendPanel = () => {
     return (
         <div className="p-4">
             <h1 className="text-5xl mb-4 font-bold text-center">Backend Panel</h1>
+            {/* Graphs Section */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-8 mx-12">
+                <div className="p-6 bg-white rounded-2xl shadow-md">
+                    <h2 className="text-2xl font-semibold mb-4">Number of Postings</h2>
+                    <Bar data={postingsData} />
+                </div>
+                <div className="p-6 bg-white rounded-2xl shadow-md">
+                    <h2 className="text-2xl font-semibold mb-4">Grade Distribution</h2>
+                    <Pie data={gradeDistributionData} />
+                </div>
+                <div className="p-6 bg-white rounded-2xl shadow-md">
+                    <h2 className="text-2xl font-semibold mb-4">Status Distribution</h2>
+                    <Pie data={statusDistributionData} />
+                </div>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
                 {/* Your Postings Section */}
                 <div className="px-8 py-2 border-r border-gray-100">
