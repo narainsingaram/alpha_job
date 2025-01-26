@@ -131,8 +131,8 @@ const StudentApplications = () => {
                                     <p><strong>Student Name:</strong> {application.studentName}</p>
                                     <p><strong>Grade:</strong> {application.grade}</p>
                                     <p><strong>GPA:</strong> {application.gpa}</p>
-                                    <p><strong>Resume:</strong> {application.resume}</p>
-                                    <p><strong>Cover Letter:</strong> {application.coverLetter}</p>
+                                    <p><strong>Resume:</strong> <a href={application.resume} target="_blank">Preview</a></p>
+                                    <p><strong>Cover Letter:</strong><a href={application.coverLetter} target="_blank">Preview</a></p>
                                     <br></br>
                                     <heading className="font-extrabold text-center text-xl bg-blue-300 px-3 py-1 rounded-3xl">Job Information</heading>
                                     <br></br>
