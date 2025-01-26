@@ -222,35 +222,54 @@ const Home = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 m-8 rounded-2xl">
                 {filteredPostings.length > 0 ? (
                     filteredPostings.map((posting) => (
-                        <div
-                            key={posting.id}
-                            className="p-6 bg-indigo-200/60 hover:bg-indigo-200 rounded-3xl duration-100 rounded-2xl shadow-lg flex flex-col justify-between"
-                        >
-                            <div>
-                                <h2 className="text-3xl text-indigo-800 font-extrabold">{posting.title}</h2>
-                                <p>{posting.description}</p>
-                                <p>Salary Range: {posting.salaryRange}</p>
-                                <p>Location: {posting.location}</p>
-                                <p>Field: {posting.field}</p>
-                                <p>Deadline: {new Date(posting.deadline?.seconds * 1000).toLocaleDateString()}</p>
-                                <div className="flex flex-wrap mt-2">
-                                    {posting.hashtags && posting.hashtags.map((tag, index) => (
-                                        <span key={index} className="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                                            #{tag}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                            <button
-                                className="btn btn-primary self-end mt-4"
-                                onClick={() => handleApply(posting.id)}
-                            >
-                                Apply
-                            </button>
-                        </div>
+<div
+    key={posting.id}
+    className="p-6 bg-indigo-200/60 hover:bg-indigo-200 rounded-3xl duration-100 shadow-lg flex flex-col justify-between"
+>
+    <div>
+        <h2 className="text-3xl text-indigo-800 font-extrabold">{posting.title}</h2>
+        <p>{posting.description}</p>
+        <p>Salary Range: {posting.salaryRange}</p>
+        <p>Location: {posting.location}</p>
+        <p>Field: {posting.field}</p>
+        <p>Deadline: {new Date(posting.deadline?.seconds * 1000).toLocaleDateString()}</p>
+        <div className="flex flex-wrap mt-2">
+            {posting.hashtags &&
+                posting.hashtags.map((tag, index) => (
+                    <span
+                        key={index}
+                        className="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                    >
+                        #{tag}
+                    </span>
+                ))}
+        </div>
+    </div>
+    <div className="flex justify-end space-x-4 mt-4">
+        <button
+            className="btn btn-primary"
+            onClick={() => handleApply(posting.id)}
+        >
+            Apply
+        </button>
+        <button
+            className="btn btn-secondary"
+            
+        >
+            Save
+        </button>
+        <button
+            className="btn btn-danger"
+            
+        >
+            Report
+        </button>
+    </div>
+</div>
+
                     ))
                 ) : (
-                    <div className="p-4 border rounded-lg shadow-md">
+                    <div className="p-4 bg-white border rounded-2xl shadow-md">
                         <h2 className="text-2xl font-semibold">No postings found</h2>
                     </div>
                 )}
