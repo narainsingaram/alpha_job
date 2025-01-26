@@ -18,6 +18,7 @@ const StudentApplications = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [selectedApplication, setSelectedApplication] = useState(null); // Added
+    const [searchQuery, setSearchQuery] = useState(''); // Added
     const studentId = Cookies.get('studentId');
 
     useEffect(() => {
@@ -103,6 +104,15 @@ const StudentApplications = () => {
         }
     };
 
+    const filteredApplications = applications.filter(application =>
+        application.postingDetail && (
+            (application.postingDetail.title && application.postingDetail.title.toLowerCase().includes(searchQuery.toLowerCase())) ||
+            (application.postingDetail.description && application.postingDetail.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
+            (application.postingDetail.location && application.postingDetail.location.toLowerCase().includes(searchQuery.toLowerCase())) ||
+            (application.studentName && application.studentName.toLowerCase().includes(searchQuery.toLowerCase()))
+        )
+    );
+
     if (loading) {
         return <Spinner />;
     }
@@ -114,9 +124,18 @@ const StudentApplications = () => {
     return (
         <div className='p-4'>
             <h1 className='text-5xl mb-4 font-bold text-center'>My Applications</h1>
+            <div className="mb-4">
+                <input
+                    type="text"
+                    placeholder="Search applications..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                />
+            </div>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 m-8 rounded-2xl'>
-                {applications.length > 0 ? (
-                    applications.map((application) => (
+                {filteredApplications.length > 0 ? (
+                    filteredApplications.map((application) => (
                         <div key={application.id} className={`p-4 rounded-2xl shadow-lg ${application.status === 'accepted' ? 'bg-emerald-50' : application.status === 'rejected' ? 'bg-rose-50' : 'bg-amber-50'}`}>
                             {application.postingDetail && (
                                 <>
@@ -132,7 +151,7 @@ const StudentApplications = () => {
                                     <p><strong>Grade:</strong> {application.grade}</p>
                                     <p><strong>GPA:</strong> {application.gpa}</p>
                                     <p><strong>Resume:</strong> <a href={application.resume} target="_blank">Preview</a></p>
-                                    <p><strong>Cover Letter:</strong><a href={application.coverLetter} target="_blank">Preview</a></p>
+                                    <p><strong>Cover Letter:</strong> <a href={application.coverLetter} target="_blank">Preview</a></p>
                                     <br></br>
                                     <heading className="font-extrabold text-center text-xl bg-blue-300 px-3 py-1 rounded-3xl">Job Information</heading>
                                     <br></br>
