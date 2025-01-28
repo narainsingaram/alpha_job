@@ -484,7 +484,7 @@ const Home = () => {
             )}
             {showCreatePostingForm && (
                 <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md overflow-y-auto max-h-[80vh]">
                         <h2 className="text-2xl font-semibold mb-4">
                             Create Job Posting
                         </h2>
