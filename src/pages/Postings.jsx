@@ -19,7 +19,17 @@ const Home = () => {
     });
     const [postingFormData, setPostingFormData] = useState({
         title: '',
+        jobType: '',
+        baseSalary: '',
         description: '',
+        companyName: '',
+        numberOfEmployers: '',
+        workHoursWeekly: '',
+        qualifications: '',
+        remoteOptions: '',
+        website: '',
+        contactEmail: '',
+        contactPhone: '',
         salaryRange: '',
         location: '',
         field: '',
@@ -126,7 +136,17 @@ const Home = () => {
             setShowCreatePostingForm(false);
             setPostingFormData({
                 title: '',
+                jobType: '',
+                baseSalary: '',
                 description: '',
+                companyName: '',
+                numberOfEmployers: '',
+                workHoursWeekly: '',
+                qualifications: '',
+                remoteOptions: '',
+                website: '',
+                contactEmail: '',
+                contactPhone: '',
                 salaryRange: '',
                 location: '',
                 field: '',
@@ -170,104 +190,181 @@ const Home = () => {
 
     return (
         <div className="p-4">
-            <div className="text-3xl mb-4 font-extrabold text-center text-black bg-blue-300 px-8 py-1 rounded-3xl mx-auto max-w-max">
+            <div className="text-3xl mb-4 font-extrabold text-center text-black bg-indigo-300 px-8 py-1 rounded-3xl mx-auto max-w-max">
                 AlphaJob
             </div>
-            <div className="mb-4 flex justify-between items-center">
-                <input
-                    type="text"
-                    placeholder="Search job postings..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4"
+            <div className="mb-4">
+    {/* Search Bar */}
+    <div className="relative w-full mb-4">
+        <input
+            type="search"
+            id="location-search"
+            className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-2xl border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-s-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
+            placeholder="Search for Job Posting"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            required
+        />
+        <button
+            type="submit"
+            className="absolute top-0 end-0 h-full p-2.5 text-sm font-medium text-white bg-blue-700 rounded-e-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+            <svg
+                className="w-4 h-4"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 20 20"
+            >
+                <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
                 />
-                <div className="flex items-center">
-                    <label className="mr-2">Sort by:</label>
-                    <select
-                        value={sortField}
-                        onChange={(e) => setSortField(e.target.value)}
-                        className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4"
-                    >
-                        <option value="">Select</option>
-                        <option value="title">Title</option>
-                        <option value="salaryRange">Salary Range</option>
-                        <option value="location">Location</option>
-                    </select>
-                    <select
-                        value={sortOrder}
-                        onChange={(e) => setSortOrder(e.target.value)}
-                        className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4"
-                    >
-                        <option value="asc">Ascending</option>
-                        <option value="desc">Descending</option>
-                    </select>
-                </div>
-                <div className="flex items-center">
-                    <label className="mr-2">Filter by Location:</label>
-                    <input
-                        type="text"
-                        placeholder="Location"
-                        value={filterLocation}
-                        onChange={(e) => setFilterLocation(e.target.value)}
-                        className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    />
-                </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 m-8 rounded-2xl">
-                {filteredPostings.length > 0 ? (
-                    filteredPostings.map((posting) => (
-<div
-    key={posting.id}
-    className="p-6 bg-indigo-200/60 hover:bg-indigo-200 rounded-3xl duration-100 shadow-lg flex flex-col justify-between"
->
-    <div>
-        <h2 className="text-3xl text-indigo-800 font-extrabold">{posting.title}</h2>
-        <p>{posting.description}</p>
-        <p>Salary Range: {posting.salaryRange}</p>
-        <p>Location: {posting.location}</p>
-        <p>Field: {posting.field}</p>
-        <p>Deadline: {new Date(posting.deadline?.seconds * 1000).toLocaleDateString()}</p>
-        <div className="flex flex-wrap mt-2">
-            {posting.hashtags &&
-                posting.hashtags.map((tag, index) => (
-                    <span
-                        key={index}
-                        className="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-                    >
-                        #{tag}
-                    </span>
-                ))}
-        </div>
+            </svg>
+            <span className="sr-only">Search</span>
+        </button>
     </div>
-    <div className="flex justify-end space-x-4 mt-4">
-        <button
-            className="btn btn-primary mr-8"
-            onClick={() => handleApply(posting.id)}
-        >
-            Apply
-        </button>
-        <button
-            className="btn btn-secondary"
 
-        >
-            Summarize
-        </button>
-        <button
-            className="btn btn-danger"
-
-        >
-            Report
-        </button>
+    {/* Sorting and Filtering */}
+    <div className="flex justify-center items-center gap-4">
+        <div className="flex items-center">
+            <label className="mr-2">Sort by:</label>
+            <select
+                value={sortField}
+                onChange={(e) => setSortField(e.target.value)}
+                className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4"
+            >
+                <option value="">Select</option>
+                <option value="title">Title</option>
+                <option value="salaryRange">Salary Range</option>
+                <option value="location">Location</option>
+            </select>
+            <select
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value)}
+                className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            >
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+            </select>
+        </div>
+        <div className="flex items-center">
+            <label className="mr-2">Filter by Location:</label>
+            <input
+                type="text"
+                placeholder="Location"
+                value={filterLocation}
+                onChange={(e) => setFilterLocation(e.target.value)}
+                className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+        </div>
     </div>
 </div>
 
-                    ))
-                ) : (
-                    <div className="p-4 bg-white border rounded-2xl shadow-md">
-                        <h2 className="text-2xl font-semibold">No postings found</h2>
-                    </div>
-                )}
-            </div>
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 m-8 rounded-2xl">
+  {filteredPostings.length > 0 ? (
+    filteredPostings.map((posting) => (
+      <div
+        key={posting.id}
+        className="p-6 bg-white shadow-md rounded-3xl border border-gray-200 flex flex-col justify-between"
+      >
+        <div>
+          <h2 className="text-2xl text-indigo-700 font-bold mb-2">
+            {posting.title}
+          </h2>
+          <img src="/Users/narainsingaram/Desktop/alpha_job/src/asset/job_image.jpg" alt="Job Image" className="mb-4" />
+          <p className="text-gray-500 mb-4">{posting.companyName}</p>
+          <div className="space-y-2 text-sm text-gray-700">
+            <p>
+              <strong>Job Type:</strong> {posting.jobType}
+            </p>
+            <p>
+              <strong>Base Salary:</strong> {posting.baseSalary}
+            </p>
+            <p>
+              <strong>Work Hours:</strong> {posting.workHoursWeekly} hours/week
+            </p>
+            <p>
+              <strong>Remote Options:</strong> {posting.remoteOptions}
+            </p>
+            <p>
+              <strong>Location:</strong> {posting.location}
+            </p>
+          </div>
+          <hr className="my-4" />
+          <p className="text-sm text-gray-700 mb-4">
+            {posting.description}
+          </p>
+          <div className="space-y-2 text-sm text-gray-700">
+            <p>
+              <strong>Qualifications:</strong> {posting.qualifications}
+            </p>
+            <p>
+              <strong>Salary Range:</strong> {posting.salaryRange}
+            </p>
+            <p>
+              <strong>Field:</strong> {posting.field}
+            </p>
+            <p>
+              <strong>Application Deadline:</strong>{" "}
+              {new Date(posting.deadline?.seconds * 1000).toLocaleDateString()}
+            </p>
+          </div>
+          <hr className="my-4" />
+          <div className="space-y-2 text-sm text-gray-700">
+            <p>
+              <strong>Website:</strong>{" "}
+              <a
+                href={posting.website}
+                className="text-indigo-600 hover:underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {posting.website}
+              </a>
+            </p>
+            <p>
+              <strong>Contact Email:</strong>{" "}
+              <a
+                href={`mailto:${posting.contactEmail}`}
+                className="text-indigo-600 hover:underline"
+              >
+                {posting.contactEmail}
+              </a>
+            </p>
+            <p>
+              <strong>Contact Phone:</strong> {posting.contactPhone}
+            </p>
+          </div>
+          <div className="flex flex-wrap mt-4">
+            {posting.hashtags &&
+              posting.hashtags.map((tag, index) => (
+                <span
+                  key={index}
+                  className="bg-indigo-100 text-indigo-700 rounded-full px-3 py-1 text-xs font-medium mr-2 mb-2"
+                >
+                  #{tag}
+                </span>
+              ))}
+          </div>
+        </div>
+        <div className="flex justify-end mt-6">
+          <button
+            className="btn bg-indigo-600 text-white"
+            onClick={() => handleApply(posting.id)}
+          >
+            Apply Now
+          </button>
+        </div>
+      </div>
+    ))
+  ) : (
+    <p>No postings found.</p>
+  )}
+</div>
             {showForm && (
                 <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
                     <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
@@ -412,6 +509,40 @@ const Home = () => {
                             <div className="mb-4">
                                 <label
                                     className="block text-gray-700 text-sm font-bold mb-2"
+                                    htmlFor="jobType"
+                                >
+                                    Job Type
+                                </label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="jobType"
+                                    name="jobType"
+                                    type="text"
+                                    value={postingFormData.jobType}
+                                    onChange={handlePostingChange}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label
+                                    className="block text-gray-700 text-sm font-bold mb-2"
+                                    htmlFor="baseSalary"
+                                >
+                                    Base Salary
+                                </label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="baseSalary"
+                                    name="baseSalary"
+                                    type="text"
+                                    value={postingFormData.baseSalary}
+                                    onChange={handlePostingChange}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label
+                                    className="block text-gray-700 text-sm font-bold mb-2"
                                     htmlFor="description"
                                 >
                                     Job Description
@@ -421,6 +552,142 @@ const Home = () => {
                                     id="description"
                                     name="description"
                                     value={postingFormData.description}
+                                    onChange={handlePostingChange}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label
+                                    className="block text-gray-700 text-sm font-bold mb-2"
+                                    htmlFor="companyName"
+                                >
+                                    Company Name
+                                </label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="companyName"
+                                    name="companyName"
+                                    type="text"
+                                    value={postingFormData.companyName}
+                                    onChange={handlePostingChange}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label
+                                    className="block text-gray-700 text-sm font-bold mb-2"
+                                    htmlFor="numberOfEmployers"
+                                >
+                                    Number of Employers
+                                </label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="numberOfEmployers"
+                                    name="numberOfEmployers"
+                                    type="text"
+                                    value={postingFormData.numberOfEmployers}
+                                    onChange={handlePostingChange}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label
+                                    className="block text-gray-700 text-sm font-bold mb-2"
+                                    htmlFor="workHoursWeekly"
+                                >
+                                    Work Hours Weekly
+                                </label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="workHoursWeekly"
+                                    name="workHoursWeekly"
+                                    type="text"
+                                    value={postingFormData.workHoursWeekly}
+                                    onChange={handlePostingChange}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label
+                                    className="block text-gray-700 text-sm font-bold mb-2"
+                                    htmlFor="qualifications"
+                                >
+                                    Recommended Qualifications
+                                </label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="qualifications"
+                                    name="qualifications"
+                                    type="text"
+                                    value={postingFormData.qualifications}
+                                    onChange={handlePostingChange}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label
+                                    className="block text-gray-700 text-sm font-bold mb-2"
+                                    htmlFor="remoteOptions"
+                                >
+                                    Remote Working Options
+                                </label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="remoteOptions"
+                                    name="remoteOptions"
+                                    type="text"
+                                    value={postingFormData.remoteOptions}
+                                    onChange={handlePostingChange}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label
+                                    className="block text-gray-700 text-sm font-bold mb-2"
+                                    htmlFor="website"
+                                >
+                                    Website
+                                </label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="website"
+                                    name="website"
+                                    type="text"
+                                    value={postingFormData.website}
+                                    onChange={handlePostingChange}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label
+                                    className="block text-gray-700 text-sm font-bold mb-2"
+                                    htmlFor="contactEmail"
+                                >
+                                    Contact Email
+                                </label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="contactEmail"
+                                    name="contactEmail"
+                                    type="email"
+                                    value={postingFormData.contactEmail}
+                                    onChange={handlePostingChange}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label
+                                    className="block text-gray-700 text-sm font-bold mb-2"
+                                    htmlFor="contactPhone"
+                                >
+                                    Contact Phone
+                                </label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="contactPhone"
+                                    name="contactPhone"
+                                    type="text"
+                                    value={postingFormData.contactPhone}
                                     onChange={handlePostingChange}
                                     required
                                 />

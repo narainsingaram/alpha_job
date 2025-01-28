@@ -12,8 +12,10 @@
 }
 
 html, body {
-  background-color: #eef2ff;
-}
+  background: linear-gradient(135deg, #f7f9ff, #e7ebfa, #d6dcf4, #c5ceef, #b4bfe9);
+  background-attachment: fixed;
+  background-size: cover;
+  }
 * {
   font-family: "Host Grotesk", sans-serif !important;
 }
