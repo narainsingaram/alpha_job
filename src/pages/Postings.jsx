@@ -14,8 +14,8 @@ const Home = () => {
         name: '',
         grade: '',
         gpa: '',
-        resume: null,
-        coverLetter: null
+        resume: '',
+        coverLetter: ''
     });
     const [postingFormData, setPostingFormData] = useState({
         title: '',
@@ -64,14 +64,6 @@ const Home = () => {
         });
     };
 
-    const handleFileChange = (e) => {
-        const { name, files } = e.target;
-        setFormData({
-            ...formData,
-            [name]: files[0]
-        });
-    };
-
     const handlePostingChange = (e) => {
         const { name, value } = e.target;
         setPostingFormData({
@@ -87,6 +79,7 @@ const Home = () => {
             alert('You must be logged in as a student to apply for a job.');
             return;
         }
+
         try {
             await addDoc(collection(db, "applications"), {
                 postingId: showForm,
@@ -94,18 +87,19 @@ const Home = () => {
                 studentName: formData.name,
                 grade: formData.grade,
                 gpa: formData.gpa,
-                resume: formData.resume.name,
-                coverLetter: formData.coverLetter.name,
+                resume: formData.resume,
+                coverLetter: formData.coverLetter,
                 status: "pending"
             });
+
             alert('Application submitted successfully!');
             setShowForm(null);
             setFormData({
                 name: '',
                 grade: '',
                 gpa: '',
-                resume: null,
-                coverLetter: null
+                resume: '',
+                coverLetter: ''
             });
         } catch (error) {
             console.error("Error submitting application:", error);
@@ -247,20 +241,20 @@ const Home = () => {
     </div>
     <div className="flex justify-end space-x-4 mt-4">
         <button
-            className="btn btn-primary"
+            className="btn btn-primary mr-8"
             onClick={() => handleApply(posting.id)}
         >
             Apply
         </button>
         <button
             className="btn btn-secondary"
-            
+
         >
-            Save
+            Summarize
         </button>
         <button
             className="btn btn-danger"
-            
+
         >
             Report
         </button>
@@ -335,14 +329,15 @@ const Home = () => {
                                     className="block text-gray-700 text-sm font-bold mb-2"
                                     htmlFor="resume"
                                 >
-                                    Resume
+                                    Resume Link
                                 </label>
                                 <input
                                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     id="resume"
                                     name="resume"
-                                    type="file"
-                                    onChange={handleFileChange}
+                                    type="text"
+                                    value={formData.resume}
+                                    onChange={handleChange}
                                     required
                                 />
                             </div>
@@ -351,14 +346,15 @@ const Home = () => {
                                     className="block text-gray-700 text-sm font-bold mb-2"
                                     htmlFor="coverLetter"
                                 >
-                                    Cover Letter
+                                    Cover Letter Link
                                 </label>
                                 <input
                                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     id="coverLetter"
                                     name="coverLetter"
-                                    type="file"
-                                    onChange={handleFileChange}
+                                    type="text"
+                                    value={formData.coverLetter}
+                                    onChange={handleChange}
                                     required
                                 />
                             </div>
