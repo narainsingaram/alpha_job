@@ -275,7 +275,10 @@ const Home = () => {
           <h2 className="text-2xl text-indigo-700 font-bold mb-2">
             {posting.title}
           </h2>
-          <img src="/Users/narainsingaram/Desktop/alpha_job/src/asset/job_image.jpg" alt="Job Image" className="mb-4" />
+          <img src="/Users/narainsingaram/Desktop/alpha_job/public/job_image.jpg" alt="Job Image" className="mb-4" />
+          <p className="text-md bg-slate-100 p-4 rounded-2xl text-gray-700 mb-4">
+            <span className='font-bold'>Description: </span>{posting.description}
+          </p>
           <p className="text-gray-500 mb-4">{posting.companyName}</p>
           <div className="space-y-2 text-sm text-gray-700">
             <p>
@@ -295,9 +298,6 @@ const Home = () => {
             </p>
           </div>
           <hr className="my-4" />
-          <p className="text-sm text-gray-700 mb-4">
-            {posting.description}
-          </p>
           <div className="space-y-2 text-sm text-gray-700">
             <p>
               <strong>Qualifications:</strong> {posting.qualifications}
