@@ -257,7 +257,6 @@ const BackendPanel = () => {
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4"
                         />
                         <div className="flex items-center">
-                            <label className="mr-2">Sort by:</label>
                             <select
                                 value={postingSortField}
                                 onChange={(e) => setPostingSortField(e.target.value)}
@@ -281,7 +280,7 @@ const BackendPanel = () => {
                     <div className="grid grid-cols-1 gap-4">
                         {filteredPostings.length > 0 ? (
                             filteredPostings.map((posting) => (
-                                <div key={posting.id} className="p-6 bg-indigo-200/75 rounded-2xl">
+                                <div key={posting.id} className="p-6 bg-white rounded-2xl">
                                     <p><strong>Title:</strong> {posting.title || "N/A"}</p>
                                     <p><strong>Location:</strong> {posting.location || "N/A"}</p>
                                     <p><strong>Description:</strong> {posting.description || "N/A"}</p>
@@ -325,7 +324,6 @@ const BackendPanel = () => {
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4"
                         />
                         <div className="flex items-center">
-                            <label className="mr-2">Sort by:</label>
                             <select
                                 value={applicationSortField}
                                 onChange={(e) => setApplicationSortField(e.target.value)}
@@ -349,7 +347,7 @@ const BackendPanel = () => {
                     <div className="grid grid-cols-1 gap-4 ">
                         {filteredApplications.length > 0 ? (
                             filteredApplications.map((application) => (
-                                <div key={application.id} className="p-6 bg-indigo-200/75 rounded-2xl">
+                                <div key={application.id} className="p-6 bg-white rounded-2xl">
                                     <p><strong>Student Name:</strong> {application.studentName || "N/A"}</p>
                                     <p><strong>Grade:</strong> {application.grade || "N/A"}</p>
                                     <p><strong>Status:</strong> {application.status || "Pending"}</p>
