@@ -275,7 +275,6 @@ const Home = () => {
           <h2 className="text-2xl text-indigo-700 font-bold mb-2">
             {posting.title}
           </h2>
-          <img src="/Users/narainsingaram/Desktop/alpha_job/public/job_image.jpg" alt="Job Image" className="mb-4" />
           <p className="text-md bg-slate-100 p-4 rounded-2xl text-gray-700 mb-4">
             <span className='font-bold'>Description: </span>{posting.description}
           </p>
@@ -352,6 +351,13 @@ const Home = () => {
           </div>
         </div>
         <div className="flex justify-end mt-6">
+        <button
+  className="btn bg-green-600 text-white"
+  onClick={() => window.location.href = `mailto:${posting.contactEmail}`}
+>
+  Contact Email
+</button>
+
           <button
             className="btn bg-indigo-600 text-white"
             onClick={() => handleApply(posting.id)}
