@@ -181,18 +181,6 @@ const BackendPanel = () => {
             return 0;
         });
 
-    const gradeDistributionData = {
-        labels: ['Grade 11', 'Grade 12', 'Grade 13', 'Grade 14'],
-        datasets: [
-            {
-                label: 'Grade Distribution',
-                data: ['Grade 11', 'Grade 12', 'Grade 13', 'Grade 14'].map(grade =>
-                    applications.filter(app => app.grade === grade).length
-                ),
-                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
-            },
-        ],
-    };
 
     const statusDistributionData = {
         labels: ['Accepted', 'Pending', 'Rejected'],
@@ -234,10 +222,6 @@ const BackendPanel = () => {
                 <div className="p-6 bg-white rounded-2xl shadow-md">
                     <h2 className="text-2xl font-semibold mb-4">Number of Postings</h2>
                     <Bar data={postingsData} />
-                </div>
-                <div className="p-6 bg-white rounded-2xl shadow-md">
-                    <h2 className="text-2xl font-semibold mb-4">Grade Distribution</h2>
-                    <Pie data={gradeDistributionData} />
                 </div>
                 <div className="p-6 bg-white rounded-2xl shadow-md">
                     <h2 className="text-2xl font-semibold mb-4">Status Distribution</h2>

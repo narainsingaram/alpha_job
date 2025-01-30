@@ -179,11 +179,11 @@ const StudentApplications = () => {
                 )}
             </div>
             {selectedApplication && (
-                <InterviewPrepModal
-                    application={selectedApplication}
-                    onClose={() => setSelectedApplication(null)}
-                />
-            )}
+    <InterviewPrepModal
+        application={selectedApplication}
+        onClose={() => setSelectedApplication(null)}
+    />
+)}
         </div>
     );
 };
