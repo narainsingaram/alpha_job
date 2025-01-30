@@ -86,31 +86,19 @@ function PDFParserReact() {
   };
 
   return (
-    <div className="App" style={{ display: 'flex', flexDirection: 'row', padding: '20px' }}>
+    <div className="App relative m-auto w-3/4" style={{flexDirection: 'row', padding: '20px' }}>
       <div style={{ flex: 1, marginRight: '20px' }}>
-        <header className="App-header">
+        <header className="App-header mb-4">
           <h1>Upload Your Resume for AI Feedback <span className="text-xl bg-green-100 text-green-500 ml-1 px-4 py-2 rounded-full">AI Feature</span></h1>
           <input
+            className=""
             type="file"
             accept="application/pdf"
             onChange={extractText}
           />
-            <div className="flex items-center justify-center w-full mt-6">
-                <label for="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                        <svg className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-                        </svg>
-                        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">PDF, DOCX, DOC</p>
-                    </div>
-                    <input id="dropzone-file"             type="file"
-            accept="application/pdf"
-            onChange={extractText} className="hidden" />
-                </label>
-            </div> 
-
         </header>
+        <p className="text-white mt-2 px-4 py-3 rounded-full bg-black">Please make sure the uploaded file is in PDF format and is an actual resume for the AI to analyze</p>
+
 
         {loading && (
           <div className="loading-indicator">
@@ -137,17 +125,17 @@ function PDFParserReact() {
         </div>
       </div>
 
-      <div style={{ flex: 1 }}>
+      <div className="mt-8" style={{ flex: 1 }}>
         {chatHistory.length > 0 && (
-          <div className="chat-history bg-indigo-100 rounded-2xl p-6">
-            <h2 className="text-xl text-indigo-900 font-bold mb-4">AI Feedback</h2>
+          <div className="chat-history bg-white rounded-3xl p-6">
+            <h2 className="text-xl text-indigo-800 font-bold mb-4">AI Feedback</h2>
             {chatHistory.map((chatItem) => (
               <div
                 key={chatItem.id}
                 className={`chat-item ${chatItem.role === 'bot' ? 'chat-start' : 'chat-end'}`}
                 style={{ marginBottom: '15px' }}
               >
-                <div className="chat-text text-indigo-800" style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
+                <div className="chat-text text-indigo-700" style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
                   {chatItem.text}
                 </div>
               </div>
