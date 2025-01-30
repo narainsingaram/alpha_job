@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import studentsData from '../students.json';
 import employersData from '../employers.json';
+import { UilChannel } from '@iconscout/react-unicons'
 
 const Login = ({ isEmployer }) => {
     const [email, setEmail] = useState('');
@@ -57,21 +58,10 @@ const Login = ({ isEmployer }) => {
                     />
                     <div className="hidden lg:relative lg:block lg:p-12">
                         <a className="block text-white" href="/">
-                            <span className="sr-only">Home</span>
-                            <svg
-                                className="h-8 sm:h-10"
-                                viewBox="0 0 28 24"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path
-                                    d="M0.41 10.3847C1.14777 7.4194 2.85643 4.7861 5.2639 2.90424C7.6714 1.02234 10.6393 0 13.695 0C16.7507 0 19.7186 1.02234 22.1261 2.90424C24.5336 4.7861 26.2422 7.4194 26.98 10.3847H25.78C23.7557 10.3847 21.8155 11.163 20.3431 12.5555C18.8707 13.948 18 15.8495 18 17.8462V24H9.39V17.8462C9.39 15.8495 8.51929 13.948 7.04687 12.5555C5.57445 11.163 3.63424 10.3847 1.61 10.3847H0.41ZM13.695 22.7692C14.9508 22.7692 16.1554 22.2923 17.0444 21.4355C17.9335 20.5786 18.439 19.416 18.439 18.1923C18.439 16.9686 17.9335 15.806 17.0444 14.9492C16.1554 14.0923 14.9508 13.6154 13.695 13.6154C12.4392 13.6154 11.2346 14.0923 10.3456 14.9492C9.45652 15.806 8.95105 16.9686 8.95105 18.1923C8.95105 19.416 9.45652 20.5786 10.3456 21.4355C11.2346 22.2923 12.4392 22.7692 13.695 22.7692Z"
-                                    fill="currentColor"
-                                />
-                            </svg>
+                            <UilChannel className='w-48 h-48 text-indigo-700 bg-indigo-100 p-2 rounded-2xl'/> 
                         </a>
                         <h2 className="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
-                            Welcome Back!
+                            Welcome Back to <span className='text-indigo-200 bg-indigo-500 px-4 py-1 rounded-full'>AlphaJob</span>
                         </h2>
                         <p className="mt-4 leading-relaxed text-white/90">
                             AlphaJob is your gateway to exciting career opportunities. Get ready to explore and connect with top employers!
@@ -103,10 +93,10 @@ const Login = ({ isEmployer }) => {
                             </a>
                         </div>
                         <div className="bg-white p-12 rounded-lg shadow-lg">
-                            <h1 className="text-3xl font-bold text-blue-600 sm:text-4xl md:text-5xl text-center">
+                            <h1 className="text-3xlfont-bold text-blue-600 sm:text-4xl md:text-5xl text-center">
                                 {isEmployer ? 'Employer Login' : 'Student Login'}
                             </h1>
-                            <form onSubmit={handleLogin} className="mt-8 grid grid-cols-6 gap-6">
+                            <form onSubmit={handleLogin} className="mt-8 mb-4 grid grid-cols-6 gap-6">
                                 <div className="col-span-6">
                                     <label
                                         className="block text-sm font-medium text-gray-700"
@@ -163,8 +153,12 @@ const Login = ({ isEmployer }) => {
                                     </button>
                                 </div>
                             </form>
-                            <p className="mt-4 text-center text-sm text-gray-500">
-                                Contact your school facilitator for Login information.
+                            <p className="mt-4 bg-slate-100 rounded-3xl px-5 py-3 text-md text-gray-500">
+                                AlphaJob is a private app that is only available to employers and students of West Forsyth High School. If you are not an employer or student, you do not have access to AlphaJob unless permissions are added by contacting the school. If you are a employer or student, please continue logging in.
+                            </p>
+
+                            <p>
+                                {isEmployer ? <span>Not an employer? <Link to="/student-login">Student Login</Link></span> : <span>Not a student? <Link to="/employer-login">Employer Login</Link></span>}
                             </p>
                         </div>
                     </div>

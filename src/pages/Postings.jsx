@@ -4,6 +4,12 @@ import { collection, onSnapshot, addDoc, serverTimestamp } from 'firebase/firest
 import Spinner from '../components/Spinner';
 import Cookies from 'js-cookie';
 import Job_Image from '../asset/job_image.jpg';
+import { UilMap } from '@iconscout/react-unicons'
+import { UilQuestionCircle } from '@iconscout/react-unicons'
+import { UilBuilding } from '@iconscout/react-unicons'
+import { UilUserPlus } from '@iconscout/react-unicons'
+import { UilEnvelopeUpload } from '@iconscout/react-unicons'
+
 const Home = () => {
     const [postings, setPostings] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -275,9 +281,9 @@ const Home = () => {
           <h2 className="text-2xl text-indigo-700 font-bold mb-2">
             {posting.title}           
           </h2>
-          <p className="text-lg mb-8 mt-2 font-bold text-blue-600 bg-blue-100 px-3 py-2 rounded-2xl">Company Name: {posting.companyName}</p>
-          <p className="text-lg mb-8 mt-2 font-bold text-emerald-600 bg-emerald-100 px-3 py-2 rounded-2xl">Job Type: {posting.jobType}</p>
-          <p className="text-lg mb-8 mt-2 font-bold text-yellow-600 bg-yellow-100 px-3 py-2 rounded-2xl">Location: {posting.location}</p>
+          <p className="text-lg mb-8 mt-2 font-bold text-blue-600 bg-blue-100 px-3 py-2 rounded-2xl"><UilBuilding className='inline mb-1 mr-1'></UilBuilding>Company Name: {posting.companyName}</p>
+          <p className="text-lg mb-8 mt-2 font-bold text-emerald-600 bg-emerald-100 px-3 py-2 rounded-2xl"><UilQuestionCircle className='inline mb-1 mr-1'></UilQuestionCircle>Job Type: {posting.jobType}</p>
+          <p className="text-lg mb-8 mt-2 font-bold text-yellow-600 bg-yellow-100 px-3 py-2 rounded-2xl"><UilMap className='inline mb-1 mr-1'></UilMap> Location: {posting.location}</p>
 
           <img className="rounded-2xl mb-4 mt-8" src={Job_Image} alt="Company Logo" />
           <p className="text-md bg-slate-100 p-4 rounded-2xl text-gray-700 mb-4">
@@ -337,6 +343,8 @@ const Home = () => {
   className="btn bg-green-600 text-white"
   onClick={() => window.location.href = `mailto:${posting.contactEmail}`}
 >
+<UilEnvelopeUpload className="mb-1"></UilEnvelopeUpload>
+
   Contact Email
 </button>
 
@@ -344,6 +352,8 @@ const Home = () => {
             className="btn bg-indigo-600 text-white"
             onClick={() => handleApply(posting.id)}
           >
+            <UilUserPlus className="mb-1"></UilUserPlus>
+            
             Apply Now
           </button>
         </div>
