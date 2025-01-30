@@ -3,7 +3,7 @@ import { db } from "../firebase";
 import { collection, onSnapshot, addDoc, serverTimestamp } from 'firebase/firestore';
 import Spinner from '../components/Spinner';
 import Cookies from 'js-cookie';
-
+import Job_Image from '../asset/job_image.jpg';
 const Home = () => {
     const [postings, setPostings] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -273,27 +273,22 @@ const Home = () => {
       >
         <div>
           <h2 className="text-2xl text-indigo-700 font-bold mb-2">
-            {posting.title}
+            {posting.title}           
           </h2>
+          <p className="text-lg mb-8 mt-2 font-bold text-blue-600 bg-blue-100 px-3 py-2 rounded-2xl">Company Name: {posting.companyName}</p>
+          <p className="text-lg mb-8 mt-2 font-bold text-emerald-600 bg-emerald-100 px-3 py-2 rounded-2xl">Job Type: {posting.jobType}</p>
+          <p className="text-lg mb-8 mt-2 font-bold text-yellow-600 bg-yellow-100 px-3 py-2 rounded-2xl">Location: {posting.location}</p>
+
+          <img className="rounded-2xl mb-4 mt-8" src={Job_Image} alt="Company Logo" />
           <p className="text-md bg-slate-100 p-4 rounded-2xl text-gray-700 mb-4">
             <span className='font-bold'>Description: </span>{posting.description}
           </p>
-          <p className="text-gray-500 mb-4">{posting.companyName}</p>
           <div className="space-y-2 text-sm text-gray-700">
-            <p>
-              <strong>Job Type:</strong> {posting.jobType}
-            </p>
             <p>
               <strong>Base Salary:</strong> {posting.baseSalary}
             </p>
             <p>
               <strong>Work Hours:</strong> {posting.workHoursWeekly} hours/week
-            </p>
-            <p>
-              <strong>Remote Options:</strong> {posting.remoteOptions}
-            </p>
-            <p>
-              <strong>Location:</strong> {posting.location}
             </p>
           </div>
           <hr className="my-4" />
@@ -307,10 +302,6 @@ const Home = () => {
             <p>
               <strong>Field:</strong> {posting.field}
             </p>
-            <p>
-              <strong>Application Deadline:</strong>{" "}
-              {new Date(posting.deadline?.seconds * 1000).toLocaleDateString()}
-            </p>
           </div>
           <hr className="my-4" />
           <div className="space-y-2 text-sm text-gray-700">
@@ -323,15 +314,6 @@ const Home = () => {
                 rel="noopener noreferrer"
               >
                 {posting.website}
-              </a>
-            </p>
-            <p>
-              <strong>Contact Email:</strong>{" "}
-              <a
-                href={`mailto:${posting.contactEmail}`}
-                className="text-indigo-600 hover:underline"
-              >
-                {posting.contactEmail}
               </a>
             </p>
             <p>

@@ -37,7 +37,7 @@ const Help = () => {
             </div>
             <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
           </div>
-          <div class="relative flex items-center justify-center w-full lg:order-2 lg:w-7/12 bg-indigo-100">
+          <div class="relative flex items-center justify-center w-full lg:order-2 lg:w-7/12 bg-indigo-50">
             <div class="relative px-4 pt-24 pb-16 text-center sm:px-6 md:px-24 2xl:px-32 lg:py-24 lg:text-left">
               <h1 class="text-4xl font-bold text-black sm:text-6xl xl:text-8xl">
                 Welcome to AlphaJob
