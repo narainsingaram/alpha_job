@@ -289,7 +289,7 @@ const Home = () => {
           <p className="text-md bg-slate-100 p-4 rounded-2xl text-gray-700 mb-4">
             <span className='font-bold'>Description: </span>{posting.description}
           </p>
-          <div className="space-y-2 text-sm text-gray-700">
+          <div className="space-y-2 px-4 bg-orange-100 py-3 px-2 rounded-2xl text-md text-gray-700">
             <p>
               <strong>Base Salary:</strong> {posting.baseSalary}
             </p>
@@ -298,7 +298,7 @@ const Home = () => {
             </p>
           </div>
           <hr className="my-4" />
-          <div className="space-y-2 text-sm text-gray-700">
+          <div className="space-y-2 px-4 bg-fuchsia-100 py-3 px-2 rounded-2xl text-md text-gray-700">
             <p>
               <strong>Qualifications:</strong> {posting.qualifications}
             </p>
@@ -310,35 +310,27 @@ const Home = () => {
             </p>
           </div>
           <hr className="my-4" />
-          <div className="space-y-2 text-sm text-gray-700">
-            <p>
-              <strong>Website:</strong>{" "}
-              <a
-                href={posting.website}
-                className="text-indigo-600 hover:underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {posting.website}
-              </a>
-            </p>
-            <p>
-              <strong>Contact Phone:</strong> {posting.contactPhone}
-            </p>
-          </div>
-          <div className="flex flex-wrap mt-4">
+          <div className="flex flex-wrap mt-8">
             {posting.hashtags &&
               posting.hashtags.map((tag, index) => (
                 <span
                   key={index}
-                  className="bg-indigo-100 text-indigo-700 rounded-full px-3 py-1 text-xs font-medium mr-2 mb-2"
+                  className="bg-indigo-100 text-indigo-700 rounded-full px-3 py-1 text-sm font-medium mr-2 mb-2"
                 >
-                  #{tag}
+                  {tag}
                 </span>
               ))}
           </div>
         </div>
-        <div className="flex justify-end mt-6">
+        <div className="flex justify-between mt-6">
+<button
+  className="btn bg-red-600 text-white"
+  onClick={() => window.location.href = `tel:${posting.contactPhone}`}
+>
+  <UilEnvelopeUpload className="mb-1"></UilEnvelopeUpload>
+  Call Now
+</button>
+
         <button
   className="btn bg-green-600 text-white"
   onClick={() => window.location.href = `mailto:${posting.contactEmail}`}

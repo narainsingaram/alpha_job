@@ -57,9 +57,9 @@ const Login = ({ isEmployer }) => {
                         className="absolute inset-0 h-full w-full object-cover opacity-80"
                     />
                     <div className="hidden lg:relative lg:block lg:p-12">
-                        <a className="block text-white" href="/">
+                        <span className="block text-white" href="/">
                             <UilChannel className='w-48 h-48 text-indigo-700 bg-indigo-100 p-2 rounded-2xl'/> 
-                        </a>
+                        </span>
                         <h2 className="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
                             Welcome Back to <span className='text-indigo-200 bg-indigo-500 px-4 py-1 rounded-full'>AlphaJob</span>
                         </h2>
