@@ -218,7 +218,7 @@ const BackendPanel = () => {
         <div className="p-4">
             <h1 className="text-5xl mb-4 font-bold text-center">Backend Panel</h1>
             {/* Graphs Section */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-8 mx-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-8 mx-12">
                 <div className="p-6 bg-white rounded-2xl shadow-md">
                     <h2 className="text-2xl font-semibold mb-4">Number of Postings</h2>
                     <Bar data={postingsData} />
