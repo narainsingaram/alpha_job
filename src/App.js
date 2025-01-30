@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Switch, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import Home from './pages/Postings.jsx';
 import CreatePosting from './pages/CreatePosting';
@@ -12,10 +12,11 @@ import AI from './pages/AI.jsx';
 
 const App = () => {
   const location = useLocation();
+  const hideNavBarPaths = ['/help', '/employer-login', '/student-login'];
 
   return (
     <>
-      {location.pathname !== '/help' && <NavBar />}
+      {!hideNavBarPaths.includes(location.pathname) && <NavBar />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/postings" element={<Home />} />
