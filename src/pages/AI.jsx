@@ -1,10 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
 
 const InterviewPrepModal = ({ application, onClose }) => {
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [chatHistory, setChatHistory] = useState([]);
+
+  useEffect(() => {
+    const handleEscapeKey = (event) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscapeKey);
+
+    return () => {
+      document.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [onClose]);
 
   const generateResponse = async () => {
     setLoading(true);
@@ -43,15 +57,13 @@ const InterviewPrepModal = ({ application, onClose }) => {
       });
 
       const response = result.response;
-      // Format the generated content with HTML markup
       const generatedText = response.text()
         .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>"); // Wrap text between double asterisks with <strong> tags
 
-      // Add the user's input to chat history
       setChatHistory((prevHistory) => [
         ...prevHistory,
         {
-          id: Date.now(), // Unique identifier for each chat item
+          id: Date.now(),
           role: 'user',
           time: getCurrentTime(),
           text: userInput,
@@ -60,7 +72,7 @@ const InterviewPrepModal = ({ application, onClose }) => {
           id: Date.now() + 1,
           role: 'bot',
           time: getCurrentTime(),
-          text: generatedText.replace(/\n/g, "<br>"), // Convert newlines to HTML line breaks
+          text: generatedText.replace(/\n/g, "<br>"),
         },
       ]);
     } finally {
@@ -77,13 +89,19 @@ const InterviewPrepModal = ({ application, onClose }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
-        <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl relative">
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl"
+        >
+          &times;
         </button>
-        <h2 className="text-2xl font-semibold mb-4">Interview Preparation for {application.postingDetail.title}</h2>
+
+        <h2 className="text-2xl font-semibold mb-4">
+          Interview Preparation for {application.postingDetail.title}
+        </h2>
+        
         <div className="relative">
           <input
             value={userInput}
@@ -117,6 +135,7 @@ const InterviewPrepModal = ({ application, onClose }) => {
             </button>
           </div>
         </div>
+
         {loading && (
           <div className="max-w-sm animate-pulse mt-4">
             <div role="status" className="h-2.5 bg-gray-200 rounded-full w-48 mb-4"></div>
@@ -128,6 +147,7 @@ const InterviewPrepModal = ({ application, onClose }) => {
             <span className="sr-only">Loading...</span>
           </div>
         )}
+
         {chatHistory.length > 0 && (
           <div className="space-y-4 mt-4">
             {chatHistory.map((chatItem) => (

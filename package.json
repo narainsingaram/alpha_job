@@ -4,6 +4,8 @@
     "private": true,
     "dependencies": {
         "@google/generative-ai": "^0.13.0",
+        "@iconscout/react-unicons": "^2.2.1",
+        "@iconscout/react-unicons-solid": "^1.1.2",
         "@nextui-org/react": "^2.4.2",
         "@nextui-org/system": "^2.2.2",
         "@nextui-org/theme": "^2.2.6",
