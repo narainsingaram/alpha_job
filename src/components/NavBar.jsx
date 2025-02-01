@@ -5,6 +5,7 @@ import { UilChannel } from '@iconscout/react-unicons'
 import { UilInfoCircle } from '@iconscout/react-unicons'
 import { UilPostcard } from '@iconscout/react-unicons'
 import { UilAnalytics } from '@iconscout/react-unicons'
+import { UilUsersAlt } from '@iconscout/react-unicons'
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -97,7 +98,15 @@ const NavBar = () => {
             )}
             {(isEmployer || isStudent || adminMode) && (
               <li className="mt-1.5">
-                <button onClick={handleLogout} className="block py-2 px-3 text-red-600 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white">Logout</button>
+              <button
+                onClick={() => {
+                  handleLogout();
+                  window.location.reload();
+                }}
+                className="block py-2 px-3 text-red-600 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white"
+              >
+                Logout
+              </button>
               </li>
             )}
           </ul>
