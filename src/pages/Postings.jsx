@@ -200,161 +200,154 @@ const Home = () => {
                 AlphaJob
             </div>
             <div className="mb-4">
-    {/* Search Bar */}
-    <div className="relative w-3/4 m-auto mb-4">
-        <input
-            type="search"
-            id="location-search"
-            className="block p-2.5 w-full z-20 text-md shadow-lg text-indigo-300 bg-white rounded-2xl border-none"
-            placeholder="Search for Job Posting"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            required
-        />
-        <button
-            type="submit"
-            className="absolute top-0 end-0 h-full p-2.5 text-sm font-medium text-white bg-blue-700 rounded-e-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
-            <svg
-                className="w-4 h-4"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 20 20"
-            >
-                <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                />
-            </svg>
-            <span className="sr-only">Search</span>
-        </button>
-    </div>
+                {/* Search Bar */}
+                <div className="relative w-full max-w-4xl mx-auto mb-4">
+                    <input
+                        type="search"
+                        id="location-search"
+                        className="block p-2.5 w-full z-20 text-md shadow-lg text-indigo-300 bg-white rounded-2xl border-none"
+                        placeholder="Search for Job Posting"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        required
+                    />
+                    <button
+                        type="submit"
+                        className="absolute top-0 end-0 h-full p-2.5 text-sm font-medium text-white bg-blue-700 rounded-e-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    >
+                        <svg
+                            className="w-4 h-4"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 20 20"
+                        >
+                            <path
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                            />
+                        </svg>
+                        <span className="sr-only">Search</span>
+                    </button>
+                </div>
 
-    {/* Sorting and Filtering */}
-    <div className="flex justify-center items-center gap-4">
-        <div className="flex items-center">
-            <label className="mr-2">Sort by:</label>
-            <select
-                value={sortField}
-                onChange={(e) => setSortField(e.target.value)}
-                className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4"
-            >
-                <option value="">Select</option>
-                <option value="title">Title</option>
-                <option value="salaryRange">Salary Range</option>
-                <option value="location">Location</option>
-            </select>
-            <select
-                value={sortOrder}
-                onChange={(e) => setSortOrder(e.target.value)}
-                className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            >
-                <option value="asc">Ascending</option>
-                <option value="desc">Descending</option>
-            </select>
-        </div>
-        <div className="flex items-center">
-            <label className="mr-2">Filter by Location:</label>
-            <input
-                type="text"
-                placeholder="Location"
-                value={filterLocation}
-                onChange={(e) => setFilterLocation(e.target.value)}
-                className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-        </div>
-    </div>
-</div>
+                {/* Sorting and Filtering */}
+                <div className="flex flex-col md:flex-row justify-center items-center gap-4">
+                    <div className="flex flex-col md:flex-row items-center mb-4 md:mb-0">
+                        <label className="mr-2">Sort by:</label>
+                        <select
+                            value={sortField}
+                            onChange={(e) => setSortField(e.target.value)}
+                            className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4"
+                        >
+                            <option value="">Select</option>
+                            <option value="title">Title</option>
+                            <option value="salaryRange">Salary Range</option>
+                            <option value="location">Location</option>
+                        </select>
+                        <select
+                            value={sortOrder}
+                            onChange={(e) => setSortOrder(e.target.value)}
+                            className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        >
+                            <option value="asc">Ascending</option>
+                            <option value="desc">Descending</option>
+                        </select>
+                    </div>
+                    <div className="flex flex-col md:flex-row items-center">
+                        <label className="mr-2">Filter by Location:</label>
+                        <input
+                            type="text"
+                            placeholder="Location"
+                            value={filterLocation}
+                            onChange={(e) => setFilterLocation(e.target.value)}
+                            className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        />
+                    </div>
+                </div>
+            </div>
 
-<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 m-8 rounded-2xl">
-  {filteredPostings.length > 0 ? (
-    filteredPostings.map((posting) => (
-      <div
-        key={posting.id}
-        className="p-6 bg-white shadow-md rounded-3xl border border-gray-200 flex flex-col justify-between"
-      >
-        <div>
-          <h2 className="text-2xl text-indigo-700 font-bold mb-2">
-            {posting.title}           
-          </h2>
-          <p className="text-lg mb-8 mt-2 font-bold text-blue-600 bg-blue-100 px-3 py-2 rounded-2xl"><UilBuilding className='inline mb-1 mr-1'></UilBuilding>Company Name: {posting.companyName}</p>
-          <p className="text-lg mb-8 mt-2 font-bold text-emerald-600 bg-emerald-100 px-3 py-2 rounded-2xl"><UilQuestionCircle className='inline mb-1 mr-1'></UilQuestionCircle>Job Type: {posting.jobType}</p>
-          <p className="text-lg mb-8 mt-2 font-bold text-yellow-600 bg-yellow-100 px-3 py-2 rounded-2xl"><UilMap className='inline mb-1 mr-1'></UilMap> Location: {posting.location}</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 m-8 rounded-2xl">
+                {filteredPostings.length > 0 ? (
+                    filteredPostings.map((posting) => (
+                        <div
+                            key={posting.id}
+                            className="p-6 bg-white shadow-md rounded-3xl border border-gray-200 flex flex-col justify-between"
+                        >
+                            <div>
+                                <h2 className="text-2xl text-indigo-700 font-bold mb-2">
+                                    {posting.title}
+                                </h2>
+                                <p className="text-lg mb-8 mt-2 font-bold text-blue-600 bg-blue-100 px-3 py-2 rounded-2xl"><UilBuilding className='inline mb-1 mr-1'></UilBuilding>Company Name: {posting.companyName}</p>
+                                <p className="text-lg mb-8 mt-2 font-bold text-emerald-600 bg-emerald-100 px-3 py-2 rounded-2xl"><UilQuestionCircle className='inline mb-1 mr-1'></UilQuestionCircle>Job Type: {posting.jobType}</p>
+                                <p className="text-lg mb-8 mt-2 font-bold text-yellow-600 bg-yellow-100 px-3 py-2 rounded-2xl"><UilMap className='inline mb-1 mr-1'></UilMap> Location: {posting.location}</p>
 
-          <img className="rounded-2xl mb-4 mt-8" src={Job_Image} alt="Company Logo" />
-          <p className="text-md bg-slate-100 p-4 rounded-2xl text-gray-700 mb-4">
-            <span className='font-bold'>Description: </span>{posting.description}
-          </p>
-          <div className="space-y-2 px-4 bg-orange-100 py-3 px-2 rounded-2xl text-md text-gray-700">
-            <p>
-              <strong>Base Salary:</strong> {posting.baseSalary}
-            </p>
-            <p>
-              <strong>Work Hours:</strong> {posting.workHoursWeekly} hours/week
-            </p>
-          </div>
-          <hr className="my-4" />
-          <div className="space-y-2 px-4 bg-fuchsia-100 py-3 px-2 rounded-2xl text-md text-gray-700">
-            <p>
-              <strong>Qualifications:</strong> {posting.qualifications}
-            </p>
-            <p>
-              <strong>Salary Range:</strong> {posting.salaryRange}
-            </p>
-            <p>
-              <strong>Field:</strong> {posting.field}
-            </p>
-          </div>
-          <hr className="my-4" />
-          <div className="flex flex-wrap mt-8">
-            {posting.hashtags &&
-              posting.hashtags.map((tag, index) => (
-                <span
-                  key={index}
-                  className="bg-indigo-100 text-indigo-700 rounded-full px-3 py-1 text-sm font-medium mr-2 mb-2"
-                >
-                  {tag}
-                </span>
-              ))}
-          </div>
-        </div>
-        <div className="flex justify-between mt-6">
-<button
-  className="btn bg-red-600 text-white"
-  onClick={() => window.location.href = `tel:${posting.contactPhone}`}
->
-  <UilEnvelopeUpload className="mb-1"></UilEnvelopeUpload>
-  Call Now
-</button>
-
-        <button
-  className="btn bg-green-600 text-white"
-  onClick={() => window.location.href = `mailto:${posting.contactEmail}`}
->
-<UilEnvelopeUpload className="mb-1"></UilEnvelopeUpload>
-
-  Contact Email
-</button>
-
-          <button
-            className="btn bg-indigo-600 text-white"
-            onClick={() => handleApply(posting.id)}
-          >
-            <UilUserPlus className="mb-1"></UilUserPlus>
-            
-            Apply Now
-          </button>
-        </div>
-      </div>
-    ))
-  ) : (
-    <p>No postings found.</p>
-  )}
-</div>
+                                <img className="rounded-2xl mb-4 mt-8" src={Job_Image} alt="Company Logo" />
+                                <p className="text-md bg-slate-100 p-4 rounded-2xl text-gray-700 mb-4">
+                                    <span className='font-bold'>Description: </span>{posting.description}
+                                </p>
+                                <div className="space-y-2 px-4 bg-orange-100 py-3 px-2 rounded-2xl text-md text-gray-700">
+                                    <p>
+                                        <strong>Base Salary:</strong> {posting.baseSalary}
+                                    </p>
+                                    <p>
+                                        <strong>Work Hours:</strong> {posting.workHoursWeekly} hours/week
+                                    </p>
+                                </div>
+                                <hr className="my-4" />
+                                <div className="space-y-2 px-4 bg-fuchsia-100 py-3 px-2 rounded-2xl text-md text-gray-700">
+                                    <p>
+                                        <strong>Qualifications:</strong> {posting.qualifications}
+                                    </p>
+                                    <p>
+                                        <strong>Salary Range:</strong> {posting.salaryRange}
+                                    </p>
+                                    <p>
+                                        <strong>Field:</strong> {posting.field}
+                                    </p>
+                                </div>
+                                <hr className="my-4" />
+                                <div className="flex flex-wrap mt-8">
+                                    {posting.hashtags &&
+                                        posting.hashtags.map((tag, index) => (
+                                            <span
+                                                key={index}
+                                                className="bg-indigo-100 text-indigo-700 rounded-full px-3 py-1 text-sm font-medium mr-2 mb-2"
+                                            >
+                                                {tag}
+                                            </span>
+                                        ))}
+                                </div>
+                            </div>
+                            <div className="flex justify-between mt-6">
+                                <button
+                                    className="btn bg-red-600 text-white flex-1 mx-1"
+                                    onClick={() => window.location.href = `tel:${posting.contactPhone}`}
+                                >
+                                    Call Now
+                                </button>
+                                <button
+                                    className="btn bg-green-600 text-white flex-1 mx-1"
+                                    onClick={() => window.location.href = `mailto:${posting.contactEmail}`}
+                                >
+                                    Contact Email
+                                </button>
+                                <button
+                                    className="btn bg-indigo-600 text-white flex-1 mx-1"
+                                    onClick={() => handleApply(posting.id)}
+                                >
+                                    Apply Now
+                                </button>
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <p>No postings found.</p>
+                )}
+            </div>
             {showForm && (
                 <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
                     <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">

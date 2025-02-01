@@ -89,20 +89,20 @@ const InterviewPrepModal = ({ application, onClose }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl relative">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl max-h-[80vh] overflow-y-auto relative">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl"
+          className="absolute top-4 right-4 text-red-500 bg-red-100 rounded-full font-bold hover:text-gray-700 w-8 h-8 text-9xl"
         >
-          &times;
+          X
         </button>
 
-        <h2 className="text-2xl font-semibold mb-4">
+        <h2 className="text-2xl font-semibold text-center mb-4">
           Interview Preparation for {application.postingDetail.title}
         </h2>
-        
-        <div className="relative">
+
+        <div className="relative mb-4">
           <input
             value={userInput}
             onChange={(e) => setUserInput(e.target.value)}
@@ -149,7 +149,7 @@ const InterviewPrepModal = ({ application, onClose }) => {
         )}
 
         {chatHistory.length > 0 && (
-          <div className="space-y-4 mt-4">
+          <div className="space-y-4 mt-4 overflow-y-auto max-h-[60vh]">
             {chatHistory.map((chatItem) => (
               <div
                 key={chatItem.id}
