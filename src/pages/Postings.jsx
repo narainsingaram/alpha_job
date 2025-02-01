@@ -9,6 +9,7 @@ import { UilQuestionCircle } from '@iconscout/react-unicons'
 import { UilBuilding } from '@iconscout/react-unicons'
 import { UilUserPlus } from '@iconscout/react-unicons'
 import { UilEnvelopeUpload } from '@iconscout/react-unicons'
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
 
 const Home = () => {
     const [postings, setPostings] = useState([]);
@@ -46,27 +47,42 @@ const Home = () => {
     const [sortField, setSortField] = useState('');
     const [sortOrder, setSortOrder] = useState('asc');
     const [filterLocation, setFilterLocation] = useState('');
+    const navigate = useNavigate(); // Initialize useNavigate
 
     useEffect(() => {
-        setLoading(true);
-        const unsub = onSnapshot(collection(db, "postings"), (snapshot) => {
-            let list = [];
-            snapshot.docs.forEach((doc) => {
-                const data = doc.data();
-                list.push({ id: doc.id, ...data });
-            });
-            setPostings(list);
-            setLoading(false);
-        }, (error) => {
-            console.error("Error fetching data:", error);
-            setError(error);
-            setLoading(false);
-        });
-
-        return () => {
-            unsub();
+        const checkAuth = () => {
+            const studentId = Cookies.get('studentId');
+            const employerId = Cookies.get('employerId');
+            if (!studentId && !employerId) {
+                navigate('/student-login'); // Redirect to login page if not logged in
+            } else {
+                fetchPostings();
+            }
         };
-    }, []);
+
+        const fetchPostings = () => {
+            setLoading(true);
+            const unsub = onSnapshot(collection(db, "postings"), (snapshot) => {
+                let list = [];
+                snapshot.docs.forEach((doc) => {
+                    const data = doc.data();
+                    list.push({ id: doc.id, ...data });
+                });
+                setPostings(list);
+                setLoading(false);
+            }, (error) => {
+                console.error("Error fetching data:", error);
+                setError(error);
+                setLoading(false);
+            });
+
+            return () => {
+                unsub();
+            };
+        };
+
+        checkAuth();
+    }, [navigate]);
 
     const handleApply = (postingId) => {
         setShowForm(postingId);
