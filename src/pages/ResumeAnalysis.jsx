@@ -11,7 +11,7 @@ function PDFParserReact() {
   const generateFeedback = async (content) => {
     setLoading(true);
 
-    const MODEL_NAME = 'gemini-pro';
+    const MODEL_NAME = 'gemini-pro';Í
     const API_KEY = 'AIzaSyBrFLwWvr-WPscoHu7O-shXHSIZnlP4FNs'; // Replace with your actual API key
 
     const genAI = new GoogleGenerativeAI(API_KEY);
