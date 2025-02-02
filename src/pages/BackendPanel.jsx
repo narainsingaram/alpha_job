@@ -71,18 +71,32 @@ const BackendPanel = () => {
         };
     }, [employerId]);
 
-    const handleUpdateApplicationStatus = async (id, status) => {
-        try {
-            await updateDoc(doc(db, "applications", id), { status });
-            setApplications(applications.map(application => application.id === id ? { ...application, status } : application));
-            if (selectedApplication?.id === id) {
-                setSelectedApplication({ ...selectedApplication, status });
-            }
-            setAlert({ type: "success", message: `Application status updated to ${status}` });
-        } catch (err) {
-            setAlert({ type: "error", message: "Failed to update application status" });
+// Function to handle the update of an application's status in the database
+const handleUpdateApplicationStatus = async (id, status) => {
+    try {
+        // Update the status of the application in the Firestore database using the application's ID
+        await updateDoc(doc(db, "applications", id), { status });
+
+        // Update the local state by mapping through the current applications list and modifying the status of the updated application
+        setApplications(applications.map(application => 
+            // If the current application's ID matches the one being updated, update its status
+            application.id === id ? { ...application, status } : application
+        ));
+
+        // If the selected application matches the one being updated, update its status as well
+        if (selectedApplication?.id === id) {
+            setSelectedApplication({ ...selectedApplication, status });
         }
-    };
+
+        // Set a success alert with a message indicating the status update was successful
+        setAlert({ type: "success", message: `Application status updated to ${status}` });
+
+    } catch (err) {
+        // If an error occurs during the update process, set an error alert with a message
+        setAlert({ type: "error", message: "Failed to update application status" });
+    }
+};
+
 
     const closeModal = () => {
         setSelectedApplication(null);
