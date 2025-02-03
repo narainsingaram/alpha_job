@@ -18,8 +18,17 @@ const Login = ({ isEmployer }) => {
         setEmployers(employersData);
     }, []);
 
+    const clearCookies = () => {
+        Cookies.remove('employerId');
+        Cookies.remove('studentId');
+        Cookies.remove('adminMode');
+        Cookies.remove('rememberMe');
+    };
+
     const handleLogin = (e) => {
         e.preventDefault();
+        clearCookies(); // Clear cookies before setting new ones
+
         if (isEmployer) {
             const employer = employers.find(emp => emp.name === email && emp.password === password);
             if (employer) {
@@ -58,7 +67,7 @@ const Login = ({ isEmployer }) => {
                     />
                     <div className="hidden lg:relative lg:block lg:p-12">
                         <span className="block text-white" href="/">
-                            <UilChannel className='w-48 h-48 text-indigo-700 bg-indigo-100 p-2 rounded-2xl'/> 
+                            <UilChannel className='w-48 h-48 text-indigo-700 bg-indigo-100 p-2 rounded-2xl'/>
                         </span>
                         <h2 className="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
                             Welcome Back to <span className='text-indigo-200 bg-indigo-500 px-4 py-1 rounded-full'>AlphaJob</span>
