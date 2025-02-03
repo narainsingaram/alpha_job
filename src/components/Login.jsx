@@ -93,6 +93,7 @@ const Login = ({ isEmployer }) => {
                             </a>
                         </div>
                         <div className="bg-white p-12 rounded-lg shadow-lg">
+                            <div className="text-center font-extrabold underline text-2xl bg-red-200 text-red-500 p-4 rounded-2xl"><span className='text-yellow-400 underline'>IMPORTANT:</span> IF YOU ARE TESTING THIS APP FROM FBLA, PLEASE USE THE TEST CREDENTIALS WITH THE USERNAME: "fblatest" AND PASSWORD: "1234" FOR BOTH EMPLOYER AND STUDENT LOGIN</div>
                             <h1 className="text-3xlfont-bold text-blue-600 sm:text-4xl md:text-5xl text-center">
                                 {isEmployer ? 'Employer Login' : 'Student Login'}
                             </h1>
