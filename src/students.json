@@ -4,6 +4,7 @@
     { "id": "student3", "name": "Emily Davis", "password": "password3" },
     { "id": "student4", "name": "Michael Johnson", "password": "password4" },
     { "id": "student5", "name": "Sarah Wilson", "password": "password5" },
-    { "id": "student6", "name": "Hem Mehta", "password": "password1234" }
+    { "id": "student6", "name": "Hem Mehta", "password": "password1234" },
+    { "id": "student7", "name": "fblatest", "password": "1234", "email": "example@gmail.com" }
   ]
   
