@@ -2,6 +2,8 @@
     { "id": "employer1", "name": "Employer One", "password": "password1", "email": "narainsingaram7@gmail.com" },
     { "id": "employer2", "name": "Employer Two", "password": "password2", "email": "narainsingaram7@gmail.com" },
     { "id": "employer3", "name": "Employer Three", "password": "password3", "email": "narainsingaram7@gmail.com" },
-    { "id": "employer4", "name": "Narain Singaram", "password": "narain2007", "email": "narainsingaram7@gmail.com" }
+    { "id": "employer4", "name": "Narain Singaram", "password": "narain2007", "email": "narainsingaram7@gmail.com" },
+    { "id": "employer5", "name": "fblatest", "password": "1234", "email": "example@gmail.com" }
+
   ]
   
