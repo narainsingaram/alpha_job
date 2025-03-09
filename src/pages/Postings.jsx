@@ -295,55 +295,137 @@ const Home = () => {
                         filteredPostings.map((posting) => {
                             const randomImage = images[Math.floor(Math.random() * images.length)];
                             return (
-                                <div key={posting.id} className="group flex flex-col h-full bg-white border border-gray-200 shadow-2xs rounded-xl dark:bg-neutral-900 dark:border-neutral-700 dark:shadow-neutral-700/70">
-                                    <div className="flex flex-col rounded-t-xl">
-                                        <img src={randomImage} alt="Job" className="w-full h-80 object-cover rounded-t-xl" />
-                                    </div>
-
-                                    <div className="p-4">
-                                        <h3 className="text-xl font-semibold text-gray-800 dark:text-neutral-300 dark:hover:text-white">
-                                            {posting.title} <br></br> 
-                                            <span className='text-sm text-bold text-blue-500 uppercase'>{posting.companyName}</span>
-                                        </h3>
-                                        <h6>
-                                            
-                                        </h6>
-                                        <p className="mt-3 text-gray-500 dark:text-neutral-500">
-                                            {posting.description}
-                                        </p>
-                                        <ul className="list-disc list-inside space-y-2 text-gray-700">
-                                            <li><strong className="text-gray-900">Base Salary:</strong> {posting.baseSalary}</li>
-                                            <li><strong className="text-gray-900">Work Hours:</strong> {posting.workHoursWeekly} hours/week</li>
-                                            <li><strong className="text-gray-900">Qualifications:</strong> {posting.qualifications}</li>
-                                            <li><strong className="text-gray-900">Job Type:</strong> {posting.jobType}</li>
-                                            <li><strong className="text-gray-900">Location:</strong> {posting.location}</li>
-                                            <li><strong className="text-gray-900">Salary Range:</strong> {posting.salaryRange}</li>
-                                            <li><strong className="text-gray-900">Field:</strong> {posting.field}</li>
-                                        </ul>
-                                    </div>
-                                    <div className="flex flex-wrap my-4 ml-4">
-                                        {posting.hashtags &&
-                                            posting.hashtags.map((tag, index) => (
-                                                <span
-                                                    key={index}
-                                                    className="bg-indigo-100 text-indigo-700 rounded-full px-3 py-1 text-sm font-medium mr-2 mb-2"
-                                                >
-                                                    {tag}
-                                                </span>
-                                            ))}
-                                    </div>
-                                    <div className="mt-auto flex border-t border-gray-200 divide-x divide-gray-200 dark:border-neutral-700 dark:divide-neutral-700">
-                                        <button className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-es-xl bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800" onClick={() => window.location.href = `tel:${posting.contactPhone}`}>
-                                            Call Now
-                                        </button>
-                                        <button onClick={() => window.location.href = `mailto:${posting.contactEmail}`} className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-ee-xl bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
-                                            Contact Email
-                                        </button>
-                                        <button onClick={() => handleApply(posting.id)} className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-ee-xl bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
-                                            Apply Now
-                                        </button>
-                                    </div>
+                                <div
+                                key={posting.id}
+                                className="group flex flex-col h-full overflow-hidden bg-white border border-gray-100 shadow-sm transition-all duration-200 hover:shadow-md rounded-xl dark:bg-neutral-900 dark:border-neutral-800"
+                              >
+                                {/* Image container with gradient overlay */}
+                                <div className="relative overflow-hidden">
+                                  <img
+                                    src={randomImage || "/placeholder.svg"}
+                                    alt="Job"
+                                    className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105"
+                                  />
+                                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                                 </div>
+                          
+                                {/* Content section */}
+                                <div className="flex-1 p-5 space-y-4">
+                                  {/* Header with company name */}
+                                  <div>
+                                    <h3 className="text-2xl font-bold mb-2 text-gray-800 line-clamp-2 dark:text-white">{posting.title}                                     
+                                        <span className="block mt-1 text-sm font-semibold tracking-wide text-primary uppercase">
+                                      {posting.companyName}
+                                    </span>
+                                    </h3>
+                                  </div>
+                          
+                                  {/* Description */}
+                                  <p className="text-sm mt-2 text-gray-600 line-clamp-3 dark:text-gray-300">{posting.description}</p>
+                          
+                                  {/* Job details */}
+                                  <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                                    <div className="flex items-start gap-1.5">
+                                      <span className="font-medium text-gray-900 dark:text-gray-200">Salary:</span>
+                                      <span className="text-gray-600 dark:text-gray-400">{posting.baseSalary}</span>
+                                    </div>
+                                    <div className="flex items-start gap-1.5">
+                                      <span className="font-medium text-gray-900 dark:text-gray-200">Hours:</span>
+                                      <span className="text-gray-600 dark:text-gray-400">{posting.workHoursWeekly}/week</span>
+                                    </div>
+                                    <div className="flex items-start gap-1.5">
+                                      <span className="font-medium text-gray-900 dark:text-gray-200">Type:</span>
+                                      <span className="text-gray-600 dark:text-gray-400">{posting.jobType}</span>
+                                    </div>
+                                    <div className="flex items-start gap-1.5">
+                                      <span className="font-medium text-gray-900 dark:text-gray-200">Location:</span>
+                                      <span className="text-gray-600 dark:text-gray-400">{posting.location}</span>
+                                    </div>
+                                    <div className="col-span-2 flex items-start gap-1.5">
+                                      <span className="font-medium text-gray-900 dark:text-gray-200">Field:</span>
+                                      <span className="text-gray-600 dark:text-gray-400">{posting.field}</span>
+                                    </div>
+                                  </div>
+                          
+                                  {/* Qualifications */}
+                                  <div className="pt-1">
+                                    <h4 className="text-sm font-semibold text-gray-900 mb-1.5 dark:text-white">Qualifications:</h4>
+                                    <p className="text-sm text-gray-600 line-clamp-2 dark:text-gray-300">{posting.qualifications}</p>
+                                  </div>
+                                </div>
+                          
+                                {/* Tags section */}
+                                <div className="px-5 pb-3">
+                                  <div className="flex flex-wrap gap-1.5">
+                                    {posting.hashtags &&
+                                      posting.hashtags.map((tag, index) => (
+                                        <span key={index} className="bg-primary/10 text-primary text-xs font-medium px-2.5 py-1 rounded-full">
+                                          {tag}
+                                        </span>
+                                      ))}
+                                  </div>
+                                </div>
+                          
+                                {/* Action buttons */}
+                                <div className="mt-auto grid grid-cols-3 border-t border-gray-100 dark:border-neutral-800">
+                                  <button
+                                    className="py-3.5 px-2 flex justify-center items-center gap-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors dark:text-gray-200 dark:hover:bg-neutral-800"
+                                    onClick={() => (window.location.href = `tel:${posting.contactPhone}`)}
+                                  >
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      className="h-4 w-4"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    >
+                                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                                    </svg>
+                                    Call
+                                  </button>
+                                  <button
+                                    className="py-3.5 px-2 flex justify-center items-center gap-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors border-x border-gray-100 dark:border-neutral-800 dark:text-gray-200 dark:hover:bg-neutral-800"
+                                    onClick={() => (window.location.href = `mailto:${posting.contactEmail}`)}
+                                  >
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      className="h-4 w-4"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    >
+                                      <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                                    </svg>
+                                    Email
+                                  </button>
+                                  <button
+                                    className="py-3.5 px-2 flex justify-center items-center gap-1.5 text-sm font-medium text-primary hover:bg-primary/5 transition-colors dark:hover:bg-primary/10"
+                                    onClick={() => handleApply(posting.id)}
+                                  >
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      className="h-4 w-4"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    >
+                                      <path d="M5 12h14"></path>
+                                      <path d="m12 5 7 7-7 7"></path>
+                                    </svg>
+                                    Apply
+                                  </button>
+                                </div>
+                              </div>
                             );
                         })
                     ) : (
@@ -352,98 +434,98 @@ const Home = () => {
                 </div>
             </div>
             {showForm && (
-                <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-                        <h2 className="text-2xl font-semibold mb-4">Apply for Job</h2>
-                        <form onSubmit={handleSubmit}>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-                                    Name
-                                </label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="name"
-                                    name="name"
-                                    type="text"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="grade">
-                                    Grade
-                                </label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="grade"
-                                    name="grade"
-                                    type="text"
-                                    value={formData.grade}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="gpa">
-                                    GPA
-                                </label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="gpa"
-                                    name="gpa"
-                                    type="text"
-                                    value={formData.gpa}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="resume">
-                                    Resume Link
-                                </label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="resume"
-                                    name="resume"
-                                    type="text"
-                                    value={formData.resume}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="coverLetter">
-                                    Cover Letter Link
-                                </label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="coverLetter"
-                                    name="coverLetter"
-                                    type="text"
-                                    value={formData.coverLetter}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <button
-                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                    type="submit"
-                                >
-                                    Submit
-                                </button>
-                                <button
-                                    className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                    type="button"
-                                    onClick={() => setShowForm(null)}
-                                >
-                                    Cancel
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                <div className="fixed inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm z-50">
+    <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md border border-gray-100">
+        <h2 className="text-2xl font-bold mb-6 text-gray-800">Apply for Job</h2>
+        <form onSubmit={handleSubmit}>
+            <div className="mb-5">
+                <label className="block text-gray-700 text-sm font-medium mb-2" htmlFor="name">
+                    Name
+                </label>
+                <input
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-700 transition-colors duration-200 ease-in-out focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                    id="name"
+                    name="name"
+                    type="text"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                />
+            </div>
+            <div className="mb-5">
+                <label className="block text-gray-700 text-sm font-medium mb-2" htmlFor="grade">
+                    Grade
+                </label>
+                <input
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-700 transition-colors duration-200 ease-in-out focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                    id="grade"
+                    name="grade"
+                    type="text"
+                    value={formData.grade}
+                    onChange={handleChange}
+                    required
+                />
+            </div>
+            <div className="mb-5">
+                <label className="block text-gray-700 text-sm font-medium mb-2" htmlFor="gpa">
+                    GPA
+                </label>
+                <input
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-700 transition-colors duration-200 ease-in-out focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                    id="gpa"
+                    name="gpa"
+                    type="text"
+                    value={formData.gpa}
+                    onChange={handleChange}
+                    required
+                />
+            </div>
+            <div className="mb-5">
+                <label className="block text-gray-700 text-sm font-medium mb-2" htmlFor="resume">
+                    Resume Link
+                </label>
+                <input
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-700 transition-colors duration-200 ease-in-out focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                    id="resume"
+                    name="resume"
+                    type="text"
+                    value={formData.resume}
+                    onChange={handleChange}
+                    required
+                />
+            </div>
+            <div className="mb-6">
+                <label className="block text-gray-700 text-sm font-medium mb-2" htmlFor="coverLetter">
+                    Cover Letter Link
+                </label>
+                <input
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-700 transition-colors duration-200 ease-in-out focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                    id="coverLetter"
+                    name="coverLetter"
+                    type="text"
+                    value={formData.coverLetter}
+                    onChange={handleChange}
+                    required
+                />
+            </div>
+            <div className="flex items-center justify-end space-x-4 mt-8">
+                <button
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2.5 px-5 rounded-l-lg transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-400"
+                    type="button"
+                    onClick={() => setShowForm(null)}
+                >
+                    Cancel
+                </button>
+                <button
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-5 rounded-r-lg shadow-md transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    type="submit"
+                >
+                    Submit
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
             )}
             {Cookies.get("adminMode") === "true" && (
                 <button
@@ -454,267 +536,339 @@ const Home = () => {
                 </button>
             )}
             {showCreatePostingForm && (
-                <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md overflow-y-auto max-h-[80vh]">
-                        <h2 className="text-2xl font-semibold mb-4">
-                            Create Job Posting
-                        </h2>
-                        <form onSubmit={handleCreatePosting}>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
-                                    Job Title
-                                </label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="title"
-                                    name="title"
-                                    type="text"
-                                    value={postingFormData.title}
-                                    onChange={handlePostingChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="jobType">
-                                    Job Type
-                                </label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="jobType"
-                                    name="jobType"
-                                    type="text"
-                                    value={postingFormData.jobType}
-                                    onChange={handlePostingChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="baseSalary">
-                                    Base Salary
-                                </label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="baseSalary"
-                                    name="baseSalary"
-                                    type="text"
-                                    value={postingFormData.baseSalary}
-                                    onChange={handlePostingChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
-                                    Job Description
-                                </label>
-                                <textarea
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="description"
-                                    name="description"
-                                    value={postingFormData.description}
-                                    onChange={handlePostingChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="companyName">
-                                    Company Name
-                                </label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="companyName"
-                                    name="companyName"
-                                    type="text"
-                                    value={postingFormData.companyName}
-                                    onChange={handlePostingChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="numberOfEmployers">
-                                    Number of Employers
-                                </label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="numberOfEmployers"
-                                    name="numberOfEmployers"
-                                    type="text"
-                                    value={postingFormData.numberOfEmployers}
-                                    onChange={handlePostingChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="workHoursWeekly">
-                                    Work Hours Weekly
-                                </label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="workHoursWeekly"
-                                    name="workHoursWeekly"
-                                    type="text"
-                                    value={postingFormData.workHoursWeekly}
-                                    onChange={handlePostingChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="qualifications">
-                                    Recommended Qualifications
-                                </label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="qualifications"
-                                    name="qualifications"
-                                    type="text"
-                                    value={postingFormData.qualifications}
-                                    onChange={handlePostingChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="remoteOptions">
-                                    Remote Working Options
-                                </label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="remoteOptions"
-                                    name="remoteOptions"
-                                    type="text"
-                                    value={postingFormData.remoteOptions}
-                                    onChange={handlePostingChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="website">
-                                    Website
-                                </label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="website"
-                                    name="website"
-                                    type="text"
-                                    value={postingFormData.website}
-                                    onChange={handlePostingChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="contactEmail">
-                                    Contact Email
-                                </label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="contactEmail"
-                                    name="contactEmail"
-                                    type="email"
-                                    value={postingFormData.contactEmail}
-                                    onChange={handlePostingChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="contactPhone">
-                                    Contact Phone
-                                </label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="contactPhone"
-                                    name="contactPhone"
-                                    type="text"
-                                    value={postingFormData.contactPhone}
-                                    onChange={handlePostingChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="salaryRange">
-                                    Salary Range
-                                </label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="salaryRange"
-                                    name="salaryRange"
-                                    type="text"
-                                    value={postingFormData.salaryRange}
-                                    onChange={handlePostingChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="location">
-                                    Location
-                                </label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="location"
-                                    name="location"
-                                    type="text"
-                                    value={postingFormData.location}
-                                    onChange={handlePostingChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="field">
-                                    Field
-                                </label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="field"
-                                    name="field"
-                                    type="text"
-                                    value={postingFormData.field}
-                                    onChange={handlePostingChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="deadline">
-                                    Deadline
-                                </label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="deadline"
-                                    name="deadline"
-                                    type="date"
-                                    value={postingFormData.deadline}
-                                    onChange={handlePostingChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="hashtags">
-                                    Hashtags (comma-separated)
-                                </label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="hashtags"
-                                    name="hashtags"
-                                    type="text"
-                                    value={postingFormData.hashtags}
-                                    onChange={handlePostingChange}
-                                    required
-                                />
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <button
-                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                    type="submit"
-                                >
-                                    Create Posting
-                                </button>
-                                <button
-                                    className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                    type="button"
-                                    onClick={() => setShowCreatePostingForm(false)}
-                                >
-                                    Cancel
-                                </button>
-                            </div>
-                        </form>
+                <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 p-4">
+    <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-y-auto max-h-[85vh] border border-gray-100">
+        {/* Header with sticky position */}
+        <div className="sticky top-0 bg-white px-8 py-6 border-b border-gray-100 z-10 rounded-t-xl">
+            <h2 className="text-2xl font-bold text-gray-800">
+                Create Job Posting
+            </h2>
+            <p className="text-gray-500 text-sm mt-1">Fill out the form below to create a new job posting</p>
+        </div>
+        
+        {/* Form with padding and grid layout */}
+        <div className="px-8 py-6">
+            <form onSubmit={handleCreatePosting} className="space-y-6">
+                {/* Basic Job Information Section */}
+                <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-gray-700 pb-1 border-b border-gray-100">Basic Information</h3>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="title">
+                                Job Title
+                            </label>
+                            <input
+                                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-gray-700 bg-white transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                                id="title"
+                                name="title"
+                                type="text"
+                                placeholder="e.g. Senior Software Engineer"
+                                value={postingFormData.title}
+                                onChange={handlePostingChange}
+                                required
+                            />
+                        </div>
+                        
+                        <div>
+                            <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="jobType">
+                                Job Type
+                            </label>
+                            <input
+                                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-gray-700 bg-white transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                                id="jobType"
+                                name="jobType"
+                                type="text"
+                                placeholder="e.g. Full-time, Part-time, Contract"
+                                value={postingFormData.jobType}
+                                onChange={handlePostingChange}
+                                required
+                            />
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="description">
+                            Job Description
+                        </label>
+                        <textarea
+                            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-gray-700 bg-white transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none min-h-[100px] resize-y"
+                            id="description"
+                            name="description"
+                            placeholder="Describe the job responsibilities, requirements, and benefits..."
+                            value={postingFormData.description}
+                            onChange={handlePostingChange}
+                            required
+                        />
                     </div>
                 </div>
+                
+                {/* Company Information Section */}
+                <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-gray-700 pb-1 border-b border-gray-100">Company Information</h3>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="companyName">
+                                Company Name
+                            </label>
+                            <input
+                                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-gray-700 bg-white transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                                id="companyName"
+                                name="companyName"
+                                type="text"
+                                placeholder="e.g. Acme Corporation"
+                                value={postingFormData.companyName}
+                                onChange={handlePostingChange}
+                                required
+                            />
+                        </div>
+                        
+                        <div>
+                            <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="numberOfEmployers">
+                                Number of Employees
+                            </label>
+                            <input
+                                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-gray-700 bg-white transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                                id="numberOfEmployers"
+                                name="numberOfEmployers"
+                                type="text"
+                                placeholder="e.g. 50-100"
+                                value={postingFormData.numberOfEmployers}
+                                onChange={handlePostingChange}
+                                required
+                            />
+                        </div>
+                        
+                        <div>
+                            <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="website">
+                                Website
+                            </label>
+                            <input
+                                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-gray-700 bg-white transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                                id="website"
+                                name="website"
+                                type="text"
+                                placeholder="e.g. https://www.example.com"
+                                value={postingFormData.website}
+                                onChange={handlePostingChange}
+                                required
+                            />
+                        </div>
+                        
+                        <div>
+                            <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="field">
+                                Industry/Field
+                            </label>
+                            <input
+                                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-gray-700 bg-white transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                                id="field"
+                                name="field"
+                                type="text"
+                                placeholder="e.g. Technology, Healthcare"
+                                value={postingFormData.field}
+                                onChange={handlePostingChange}
+                                required
+                            />
+                        </div>
+                    </div>
+                </div>
+                
+                {/* Job Details Section */}
+                <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-gray-700 pb-1 border-b border-gray-100">Job Details</h3>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="baseSalary">
+                                Base Salary
+                            </label>
+                            <input
+                                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-gray-700 bg-white transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                                id="baseSalary"
+                                name="baseSalary"
+                                type="text"
+                                placeholder="e.g. $75,000"
+                                value={postingFormData.baseSalary}
+                                onChange={handlePostingChange}
+                                required
+                            />
+                        </div>
+                        
+                        <div>
+                            <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="salaryRange">
+                                Salary Range
+                            </label>
+                            <input
+                                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-gray-700 bg-white transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                                id="salaryRange"
+                                name="salaryRange"
+                                type="text"
+                                placeholder="e.g. $70,000-$90,000"
+                                value={postingFormData.salaryRange}
+                                onChange={handlePostingChange}
+                                required
+                            />
+                        </div>
+                        
+                        <div>
+                            <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="workHoursWeekly">
+                                Work Hours Weekly
+                            </label>
+                            <input
+                                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-gray-700 bg-white transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                                id="workHoursWeekly"
+                                name="workHoursWeekly"
+                                type="text"
+                                placeholder="e.g. 40"
+                                value={postingFormData.workHoursWeekly}
+                                onChange={handlePostingChange}
+                                required
+                            />
+                        </div>
+                        
+                        <div>
+                            <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="location">
+                                Location
+                            </label>
+                            <input
+                                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-gray-700 bg-white transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                                id="location"
+                                name="location"
+                                type="text"
+                                placeholder="e.g. New York, NY"
+                                value={postingFormData.location}
+                                onChange={handlePostingChange}
+                                required
+                            />
+                        </div>
+                        
+                        <div>
+                            <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="remoteOptions">
+                                Remote Working Options
+                            </label>
+                            <input
+                                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-gray-700 bg-white transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                                id="remoteOptions"
+                                name="remoteOptions"
+                                type="text"
+                                placeholder="e.g. Remote, Hybrid, On-site"
+                                value={postingFormData.remoteOptions}
+                                onChange={handlePostingChange}
+                                required
+                            />
+                        </div>
+                        
+                        <div>
+                            <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="deadline">
+                                Application Deadline
+                            </label>
+                            <input
+                                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-gray-700 bg-white transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                                id="deadline"
+                                name="deadline"
+                                type="date"
+                                value={postingFormData.deadline}
+                                onChange={handlePostingChange}
+                                required
+                            />
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="qualifications">
+                            Recommended Qualifications
+                        </label>
+                        <input
+                            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-gray-700 bg-white transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                            id="qualifications"
+                            name="qualifications"
+                            type="text"
+                            placeholder="e.g. Bachelor's degree, 3+ years experience"
+                            value={postingFormData.qualifications}
+                            onChange={handlePostingChange}
+                            required
+                        />
+                    </div>
+                </div>
+                
+                {/* Contact Information Section */}
+                <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-gray-700 pb-1 border-b border-gray-100">Contact Information</h3>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="contactEmail">
+                                Contact Email
+                            </label>
+                            <input
+                                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-gray-700 bg-white transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                                id="contactEmail"
+                                name="contactEmail"
+                                type="email"
+                                placeholder="e.g. jobs@example.com"
+                                value={postingFormData.contactEmail}
+                                onChange={handlePostingChange}
+                                required
+                            />
+                        </div>
+                        
+                        <div>
+                            <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="contactPhone">
+                                Contact Phone
+                            </label>
+                            <input
+                                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-gray-700 bg-white transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                                id="contactPhone"
+                                name="contactPhone"
+                                type="text"
+                                placeholder="e.g. (555) 123-4567"
+                                value={postingFormData.contactPhone}
+                                onChange={handlePostingChange}
+                                required
+                            />
+                        </div>
+                    </div>
+                </div>
+                
+                {/* Tags Section */}
+                <div>
+                    <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="hashtags">
+                        Hashtags
+                    </label>
+                    <input
+                        className="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-gray-700 bg-white transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                        id="hashtags"
+                        name="hashtags"
+                        type="text"
+                        placeholder="e.g. #engineering, #remote, #startup"
+                        value={postingFormData.hashtags}
+                        onChange={handlePostingChange}
+                        required
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Separate hashtags with commas</p>
+                </div>
+                
+                {/* Form Actions - Sticky Footer */}
+                <div className="sticky bottom-0 bg-white pt-4 pb-6 border-t border-gray-100 mt-8 flex items-center justify-end space-x-4">
+                    <button
+                        className="px-5 py-2.5 rounded-lg border border-gray-300 bg-white text-gray-700 font-medium transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200"
+                        type="button"
+                        onClick={() => setShowCreatePostingForm(false)}
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        className="px-5 py-2.5 rounded-lg bg-blue-600 text-white font-medium transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-sm"
+                        type="submit"
+                    >
+                        Create Posting
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
             )}
         </div>
     );
