@@ -12,7 +12,7 @@
 }
 
 html, body {
-  background: oklch(0.968 0.007 247.896);
+  background: rgb(245, 243, 253);
 }
 
 * {
