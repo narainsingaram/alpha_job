@@ -232,16 +232,21 @@ const handleUpdateApplicationStatus = async (id, status) => {
         <div className="p-4">
             <h1 className="text-5xl mb-4 font-bold text-center">Backend Panel</h1>
             {/* Graphs Section */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-8 mx-12">
-                <div className="p-6 bg-white rounded-2xl shadow-md">
-                    <h2 className="text-2xl font-semibold mb-4">Number of Postings</h2>
-                    <Bar data={postingsData} />
-                </div>
-                <div className="p-6 bg-white rounded-2xl shadow-md">
-                    <h2 className="text-2xl font-semibold mb-4">Status Distribution</h2>
-                    <Pie data={statusDistributionData} />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-8 mx-12">
+            <div className="p-6 bg-white rounded-2xl shadow-md border border-gray-200">
+                <h2 className="text-2xl font-semibold mb-4">Number of Postings</h2>
+                <div className="h-48"> {/* Adjust height as needed */}
+                <Bar data={postingsData} options={{ maintainAspectRatio: false, responsive: true }} />
                 </div>
             </div>
+            <div className="p-6 bg-white rounded-2xl shadow-md border border-gray-200">
+                <h2 className="text-2xl font-semibold mb-4">Status Distribution</h2>
+                <div className="h-48"> {/* Adjust height as needed */}
+                <Pie data={statusDistributionData} options={{ maintainAspectRatio: false, responsive: true }} />
+                </div>
+            </div>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
                 {/* Your Postings Section */}
                 <div className="px-8 py-2 border-r border-gray-100">

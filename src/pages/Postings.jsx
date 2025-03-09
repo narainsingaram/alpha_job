@@ -209,7 +209,7 @@ const Home = () => {
     }
 
     return (
-        <div className="p-4">
+        <div className="p-4 ">
             <div className="mb-4">
                 <div className="p-6 bg-white dark:bg-gray-800 rounded-xl border-gray-200 border max-w-[50rem] mx-auto">
                     <div className="mb-6">
@@ -292,8 +292,9 @@ const Home = () => {
             <div className="max-w-[100rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredPostings.length > 0 ? (
-                        filteredPostings.map((posting) => {
-                            const randomImage = images[Math.floor(Math.random() * images.length)];
+                        filteredPostings.map((posting, index) => {
+                            const imageIndex = index % images.length;
+                            const imageSrc = images[imageIndex];
                             return (
                                 <div
                                 key={posting.id}
@@ -302,27 +303,27 @@ const Home = () => {
                                 {/* Image container with gradient overlay */}
                                 <div className="relative overflow-hidden">
                                   <img
-                                    src={randomImage || "/placeholder.svg"}
+                                    src={imageSrc || "/placeholder.svg"}
                                     alt="Job"
                                     className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105"
                                   />
                                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                                 </div>
-                          
+
                                 {/* Content section */}
                                 <div className="flex-1 p-5 space-y-4">
                                   {/* Header with company name */}
                                   <div>
-                                    <h3 className="text-2xl font-bold mb-2 text-gray-800 line-clamp-2 dark:text-white">{posting.title}                                     
+                                    <h3 className="text-2xl font-bold mb-2 text-gray-800 line-clamp-2 dark:text-white">{posting.title}
                                         <span className="block mt-1 text-sm font-semibold tracking-wide text-primary uppercase">
                                       {posting.companyName}
                                     </span>
                                     </h3>
                                   </div>
-                          
+
                                   {/* Description */}
                                   <p className="text-sm mt-2 text-gray-600 line-clamp-3 dark:text-gray-300">{posting.description}</p>
-                          
+
                                   {/* Job details */}
                                   <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
                                     <div className="flex items-start gap-1.5">
@@ -346,14 +347,14 @@ const Home = () => {
                                       <span className="text-gray-600 dark:text-gray-400">{posting.field}</span>
                                     </div>
                                   </div>
-                          
+
                                   {/* Qualifications */}
                                   <div className="pt-1">
                                     <h4 className="text-sm font-semibold text-gray-900 mb-1.5 dark:text-white">Qualifications:</h4>
                                     <p className="text-sm text-gray-600 line-clamp-2 dark:text-gray-300">{posting.qualifications}</p>
                                   </div>
                                 </div>
-                          
+
                                 {/* Tags section */}
                                 <div className="px-5 pb-3">
                                   <div className="flex flex-wrap gap-1.5">
@@ -365,7 +366,7 @@ const Home = () => {
                                       ))}
                                   </div>
                                 </div>
-                          
+
                                 {/* Action buttons */}
                                 <div className="mt-auto grid grid-cols-3 border-t border-gray-100 dark:border-neutral-800">
                                   <button
@@ -545,14 +546,14 @@ const Home = () => {
             </h2>
             <p className="text-gray-500 text-sm mt-1">Fill out the form below to create a new job posting</p>
         </div>
-        
+
         {/* Form with padding and grid layout */}
         <div className="px-8 py-6">
             <form onSubmit={handleCreatePosting} className="space-y-6">
                 {/* Basic Job Information Section */}
                 <div className="space-y-4">
                     <h3 className="text-lg font-semibold text-gray-700 pb-1 border-b border-gray-100">Basic Information</h3>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="title">
@@ -569,7 +570,7 @@ const Home = () => {
                                 required
                             />
                         </div>
-                        
+
                         <div>
                             <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="jobType">
                                 Job Type
@@ -586,7 +587,7 @@ const Home = () => {
                             />
                         </div>
                     </div>
-                    
+
                     <div>
                         <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="description">
                             Job Description
@@ -602,11 +603,11 @@ const Home = () => {
                         />
                     </div>
                 </div>
-                
+
                 {/* Company Information Section */}
                 <div className="space-y-4">
                     <h3 className="text-lg font-semibold text-gray-700 pb-1 border-b border-gray-100">Company Information</h3>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="companyName">
@@ -623,7 +624,7 @@ const Home = () => {
                                 required
                             />
                         </div>
-                        
+
                         <div>
                             <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="numberOfEmployers">
                                 Number of Employees
@@ -639,7 +640,7 @@ const Home = () => {
                                 required
                             />
                         </div>
-                        
+
                         <div>
                             <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="website">
                                 Website
@@ -655,7 +656,7 @@ const Home = () => {
                                 required
                             />
                         </div>
-                        
+
                         <div>
                             <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="field">
                                 Industry/Field
@@ -673,11 +674,11 @@ const Home = () => {
                         </div>
                     </div>
                 </div>
-                
+
                 {/* Job Details Section */}
                 <div className="space-y-4">
                     <h3 className="text-lg font-semibold text-gray-700 pb-1 border-b border-gray-100">Job Details</h3>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="baseSalary">
@@ -694,7 +695,7 @@ const Home = () => {
                                 required
                             />
                         </div>
-                        
+
                         <div>
                             <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="salaryRange">
                                 Salary Range
@@ -710,7 +711,7 @@ const Home = () => {
                                 required
                             />
                         </div>
-                        
+
                         <div>
                             <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="workHoursWeekly">
                                 Work Hours Weekly
@@ -726,7 +727,7 @@ const Home = () => {
                                 required
                             />
                         </div>
-                        
+
                         <div>
                             <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="location">
                                 Location
@@ -742,7 +743,7 @@ const Home = () => {
                                 required
                             />
                         </div>
-                        
+
                         <div>
                             <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="remoteOptions">
                                 Remote Working Options
@@ -758,7 +759,7 @@ const Home = () => {
                                 required
                             />
                         </div>
-                        
+
                         <div>
                             <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="deadline">
                                 Application Deadline
@@ -774,7 +775,7 @@ const Home = () => {
                             />
                         </div>
                     </div>
-                    
+
                     <div>
                         <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="qualifications">
                             Recommended Qualifications
@@ -791,11 +792,11 @@ const Home = () => {
                         />
                     </div>
                 </div>
-                
+
                 {/* Contact Information Section */}
                 <div className="space-y-4">
                     <h3 className="text-lg font-semibold text-gray-700 pb-1 border-b border-gray-100">Contact Information</h3>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="contactEmail">
@@ -812,7 +813,7 @@ const Home = () => {
                                 required
                             />
                         </div>
-                        
+
                         <div>
                             <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="contactPhone">
                                 Contact Phone
@@ -830,7 +831,7 @@ const Home = () => {
                         </div>
                     </div>
                 </div>
-                
+
                 {/* Tags Section */}
                 <div>
                     <label className="block text-gray-700 text-sm font-medium mb-1.5" htmlFor="hashtags">
@@ -848,7 +849,7 @@ const Home = () => {
                     />
                     <p className="text-xs text-gray-500 mt-1">Separate hashtags with commas</p>
                 </div>
-                
+
                 {/* Form Actions - Sticky Footer */}
                 <div className="sticky bottom-0 bg-white pt-4 pb-6 border-t border-gray-100 mt-8 flex items-center justify-end space-x-4">
                     <button
