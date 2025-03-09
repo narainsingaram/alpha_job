@@ -1,50 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
-import { UilChannel } from '@iconscout/react-unicons'
-import { UilPostcard } from '@iconscout/react-unicons'
-import { UilAnalytics } from '@iconscout/react-unicons'
-import { UilSignOutAlt } from '@iconscout/react-unicons'
-import { UilListOl } from '@iconscout/react-unicons'
-import { UilRocket } from '@iconscout/react-unicons'
-
-const NavBar = () => {
-  const navigate = useNavigate();
-  const [adminMode, setAdminMode] = useState(false);
-  const [isEmployer, setIsEmployer] = useState(false);
-  const [isStudent, setIsStudent] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const isAdmin = Cookies.get('adminMode') === 'true';
-    const employerId = Cookies.get('employerId');
-    const studentId = Cookies.get('studentId');
-
-    setAdminMode(isAdmin);
-    setIsEmployer(!!employerId);
-    setIsStudent(!!studentId);
-  }, []);
-
-  const handleAdminLogin = () => {
-    document.getElementById('admin_modal').showModal();
-  };
-
-  const handleLogout = () => {
-    Cookies.remove('adminMode');
-    Cookies.remove('employerId');
-    Cookies.remove('studentId');
-    setAdminMode(false);
-    setIsEmployer(false);
-    setIsStudent(false);
-    navigate('/');
-  };
-
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
-
-  return (
-    <nav className="bg-white max-w-[100rem] m-auto my-8 p-2.5 rounded-2xl">
+    <nav className="bg-white p-2 m-4 rounded-3xl border-gray-800">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
           <span className="self-center text-2xl font-extrabold text-indigo-700"><UilChannel className='inline mb-2 mr-2'></UilChannel>AlphaJob</span>
@@ -168,7 +122,3 @@ const NavBar = () => {
         </div>
       </dialog>
     </nav>
-  );
-};
-
-export default NavBar;

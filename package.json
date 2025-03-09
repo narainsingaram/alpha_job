@@ -27,6 +27,7 @@
         "js-cookie": "^3.0.5",
         "jspdf": "^2.5.1",
         "jspdf-autotable": "^3.8.2",
+        "lucide-react": "^0.477.0",
         "mammoth": "^1.9.0",
         "pdf-lib": "^1.17.1",
         "pdf-parse": "^1.1.1",
