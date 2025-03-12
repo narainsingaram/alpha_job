@@ -23,7 +23,7 @@ const InterviewPrepModal = ({ application, onClose }) => {
   const generateResponse = async () => {
     setLoading(true);
 
-    const MODEL_NAME = "gemini-pro";
+    const MODEL_NAME = "gemini-1.5-pro";
     const API_KEY = "AIzaSyBrFLwWvr-WPscoHu7O-shXHSIZnlP4FNs"; // Replace with your actual API key
 
     const genAI = new GoogleGenerativeAI(API_KEY);

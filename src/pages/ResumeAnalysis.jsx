@@ -13,8 +13,8 @@ function PDFParserReact() {
   const generateFeedback = async (content) => {
     setLoading(true)
 
-    const MODEL_NAME = "gemini-pro"
-    const API_KEY = "AIzaSyBrFLwWvr-WPscoHu7O-shXHSIZnlP4FNs" // Replace with your actual API key
+    const MODEL_NAME = "gemini-1.5-pro"; //  <---- CHECK GOOGLE DOCS FOR CORRECT NAME
+    const API_KEY = "AIzaSyBrFLwWvr-WPscoHu7O-shXHSIZnlP4FNs"; // Replace with your actual API key
 
     const genAI = new GoogleGenerativeAI(API_KEY)
     const model = genAI.getGenerativeModel({ model: MODEL_NAME })
@@ -65,6 +65,8 @@ function PDFParserReact() {
           text: response, // Only save and display the AI feedback
         },
       ])
+    } catch (error) {
+        console.error("Gemini API Error:", error); // Log the full error
     } finally {
       setLoading(false)
     }
@@ -182,9 +184,7 @@ function PDFParserReact() {
                     />
                   </svg>
                   AI Feedback
-                </h2>
-
-                {loading ? (
+                </h2>... {loading ? (
                   <div className="flex flex-col items-center justify-center py-12">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mb-4"></div>
                     <p className="text-indigo-700 font-medium">Analyzing your resume...</p>
@@ -237,4 +237,3 @@ function PDFParserReact() {
 }
 
 export default PDFParserReact
-

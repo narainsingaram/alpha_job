@@ -12,7 +12,7 @@ const ModalComp = ({ open, setOpen, img, name, info, email, contact, id, handleD
         setLoading(true);
         // Replace with your actual API key and model name
         const MODEL_NAME = "gemini-pro";
-        const API_KEY = "AIzaSyDRlUUReWOBg7x237Y5WtC0bOyBhyMSrUw";
+        const API_KEY = "AIzaSyAFMsRoAGHpw5v1EpydUM6x7WDVeFinZBk";
 
         const genAI = new GoogleGenerativeAI(API_KEY);
         const model = genAI.getGenerativeModel({ model: MODEL_NAME });
