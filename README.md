@@ -17,12 +17,12 @@ AlphaJob is a full-stack job listing platform designed to seamlessly connect stu
 - Manage job listings through a secure dashboard
 - Receive student applications directly
 
-  | Category       | Tools & Libraries                                |
-|----------------|--------------------------------------------------|
-| **Frontend**   | React.js, Tailwind CSS                           |
-| **Backend**    | Node.js, Express.js                              |
-| **AI Integration** | OpenAI / Gemini API (for hashtag generation) |
-| **Hosting**    | Vercel (frontend & backend)                      |
+| Category         | Tools & Libraries                                |
+|------------------|--------------------------------------------------|
+| **Frontend**     | React.js, Tailwind CSS                           |
+| **Backend**      | Node.js, Express.js                              |
+| **AI Integration** | OpenAI / Gemini API (for hashtag generation)  |
+| **Hosting**      | Vercel (frontend & backend)                      |
 
 
 ## 📈 Future Features
