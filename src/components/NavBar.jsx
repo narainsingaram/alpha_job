@@ -9,6 +9,7 @@ import { UilAnalytics } from "@iconscout/react-unicons"
 import { UilSignOutAlt } from "@iconscout/react-unicons"
 import { UilListOl } from "@iconscout/react-unicons"
 import { UilRocket } from "@iconscout/react-unicons"
+import { UilCommentAltMessage } from '@iconscout/react-unicons'
 
 const NavBar = () => {
   const navigate = useNavigate()
@@ -108,6 +109,15 @@ const NavBar = () => {
                   >
                     <UilRocket className="w-5 h-5 mr-2 text-black"></UilRocket>
                     <span className="text-black">Resume Analysis</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/interview-prep"
+                    className="flex items-center py-2 px-3 text-gray-700 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 md:hover:bg-transparent md:border-0 md:p-0 transition-colors duration-200"
+                  >
+                    <UilCommentAltMessage className="w-5 h-5 mr-2 text-black"></UilCommentAltMessage>
+                    <span className="text-black">Interview Prep</span>
                   </a>
                 </li>
               </>

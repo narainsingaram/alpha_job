@@ -9,6 +9,7 @@ import StudentApplications from './pages/StudentApplications';
 import ResumeAnalysis from './pages/ResumeAnalysis';
 import Help from './pages/Help.jsx';
 import AI from './pages/AI.jsx';
+import MockInterview from './pages/MockInterview.jsx';
 
 const App = () => {
   const location = useLocation();
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/ai_analysis" element={<ResumeAnalysis />} />
         <Route path="/AI" element={<AI />} />
         <Route path="/help" element={<Help />} />
+        <Route path="/interview-prep" element={<MockInterview />} />
       </Routes>
     </>
   );
