@@ -11,10 +11,106 @@ import {
   UilFileUpload,
   UilLinkedin,
   UilFileCheck,
-  UilTimes
+  UilTimes,
+  UilCheckCircle,
+  UilExclamationTriangle
 } from '@iconscout/react-unicons';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import { extractTextFromFile } from '../utils/fileUtils';
+
+// Avatar component for the interviewer
+const InterviewerAvatar = ({ isSpeaking, isListening, isThinking }) => {
+  const controls = useAnimation();
+  
+  useEffect(() => {
+    if (isSpeaking) {
+      const sequence = async () => {
+        while (isSpeaking) {
+          await controls.start({
+            y: [0, -5, 0],
+            transition: { duration: 0.6, repeat: Infinity, ease: 'easeInOut' }
+          });
+        }
+      };
+      sequence();
+    } else {
+      controls.stop();
+      controls.set({ y: 0 });
+    }
+  }, [isSpeaking, controls]);
+
+  return (
+    <div className="flex flex-col items-center mb-6">
+      <motion.div 
+        className="relative w-32 h-32 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 overflow-hidden shadow-lg border-4 border-white"
+        animate={controls}
+      >
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="relative w-16 h-16">
+            {/* Eyes */}
+            <div className="absolute top-1/2 left-0 right-0 flex justify-center -mt-4">
+              <div className="flex space-x-4">
+                <div className="w-4 h-4 bg-blue-600 rounded-full"></div>
+                <div className="w-4 h-4 bg-blue-600 rounded-full"></div>
+              </div>
+            </div>
+            
+            {/* Mouth */}
+            <motion.div 
+              className={`absolute bottom-0 left-1/2 w-6 h-3 -ml-3 rounded-b-full ${
+                isSpeaking ? 'bg-red-400' : 'bg-gray-600'
+              }`}
+              animate={isSpeaking ? {
+                height: [3, 6, 3],
+                width: [24, 28, 24],
+                transition: { duration: 0.3, repeat: Infinity }
+              } : {}}
+            />
+          </div>
+        </div>
+        
+        {/* Thinking animation */}
+        {isThinking && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
+            <div className="flex space-x-1">
+              {[0, 1, 2].map((i) => (
+                <motion.div
+                  key={i}
+                  className="w-2 h-2 bg-white rounded-full"
+                  animate={{
+                    y: [0, -10, 0],
+                    transition: {
+                      duration: 1,
+                      repeat: Infinity,
+                      delay: i * 0.2,
+                    },
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+        
+        {/* Listening indicator */}
+        {isListening && (
+          <div className="absolute -bottom-2 -right-2">
+            <div className="relative">
+              <div className="absolute inset-0 bg-blue-500 rounded-full opacity-75 animate-ping"></div>
+              <div className="relative w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+                <UilMicrophone size={14} className="text-white" />
+              </div>
+            </div>
+          </div>
+        )}
+      </motion.div>
+      
+      <div className="mt-4 text-center">
+        <h3 className="font-semibold text-gray-800">Your Interviewer</h3>
+        <p className="text-sm text-gray-500">Senior Hiring Manager</p>
+      </div>
+    </div>
+  );
+};
 
 // --- Browser Voice APIs ---
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -29,42 +125,100 @@ const MockInterview = () => {
   const [jobTitle, setJobTitle] = useState('Software Engineer');
   const [jobDescription, setJobDescription] = useState('Seeking a skilled software engineer with experience in React, Node.js, and cloud technologies. The ideal candidate will be a great communicator and a team player.');
   const [resumeText, setResumeText] = useState('');
+  const [resumeFile, setResumeFile] = useState(null);
   const [linkedinUrl, setLinkedinUrl] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState('');
   const [uploadSuccess, setUploadSuccess] = useState('');
   const fileInputRef = useRef(null);
   
-  const systemPrompt = `
-You are an expert AI interviewer embodying the role of a Senior Engineering Manager at Google. Your goal is to conduct a professional, in-depth technical and behavioral interview for the position of ${jobTitle}.
+  // Enhanced resume text extraction
+  const extractResumeInfo = async (text) => {
+    try {
+      // Extract key information from resume
+      const nameMatch = text.match(/^(.*?)\n/s) || [];
+      const emailMatch = text.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i) || [];
+      const phoneMatch = text.match(/\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/) || [];
+      const skillsMatch = text.match(/(?:skills|technical\s*skills|technologies)[:;\s]*([\s\S]*?)(?=\n\n|$)/i) || [];
+      const expMatch = text.match(/(?:experience|work\s*experience)[:;\s]*([\s\S]*?)(?=\n\n|$)/i) || [];
+      const eduMatch = text.match(/(?:education|academic\s*background)[:;\s]*([\s\S]*?)(?=\n\n|$)/i) || [];
+      
+      const resumeInfo = [];
+      if (nameMatch[1]) resumeInfo.push(`Name: ${nameMatch[1].trim()}`);
+      if (emailMatch[0]) resumeInfo.push(`Email: ${emailMatch[0]}`);
+      if (phoneMatch[0]) resumeInfo.push(`Phone: ${phoneMatch[0]}`);
+      if (skillsMatch[1]) resumeInfo.push(`Skills: ${skillsMatch[1].trim()}`);
+      if (expMatch[1]) resumeInfo.push(`Experience: ${expMatch[1].trim()}`);
+      if (eduMatch[1]) resumeInfo.push(`Education: ${eduMatch[1].trim()}`);
+      
+      return resumeInfo.length > 0 ? resumeInfo.join('\n') : text;
+    } catch (error) {
+      console.error('Error processing resume:', error);
+      return text; // Fallback to original text if parsing fails
+    }
+  };
+  
+  const systemPrompt = `You are an expert AI interviewer conducting a mock interview for the position of ${jobTitle}. Your role is to be both professional and insightful, helping the candidate prepare for real interviews.
+
+**Resume Context (USE THIS FOR PERSONALIZED QUESTIONS):**
+${resumeText ? resumeText : 'No resume information provided'}
+
+**LinkedIn Profile (ADDITIONAL CONTEXT):**
+${linkedinUrl || 'No LinkedIn profile provided'}
+
+**Interview Guidelines:**
+1. Start by acknowledging something specific from their resume (e.g., "I see you worked at [Company] as a [Role]...")
+2. Ask detailed follow-up questions about their experiences and skills
+3. Reference specific technologies or projects from their resume
+4. If they mention a challenge, ask how they overcame it
+5. Provide constructive feedback after their responses
+6. Keep questions relevant to the ${jobTitle} position
+7. If they seem stuck, offer gentle guidance or rephrase the question
 
 **Your Persona:**
-- You are professional, encouraging, yet challenging.
-- You work for Google.
-- Do NOT reveal you are an AI.
+- You are a Senior Engineering Manager at Google with 15+ years of experience
+- You are knowledgeable about the candidate's background from their resume and LinkedIn
+- You are professional, encouraging, and provide constructive feedback
+- You can reference specific details from their resume/LinkedIn naturally in conversation
+- You NEVER reveal you are an AI - you must maintain the persona of a human interviewer
 
 **Interview Structure:**
-1. Start with a brief, friendly greeting.
-2. Ask one question at a time.
-3. Begin with a behavioral question like "Tell me about yourself" or "Walk me through your resume."
-4. Listen to the user's answer and ask relevant, insightful follow-up questions.
-5. Alternate between behavioral questions (e.g., "Tell me about a time you faced a challenge") and technical questions related to the following job description:
-    - Job Title: ${jobTitle}
-    - Description: ${jobDescription}
-6. Keep your responses concise and focused on the interview.
+1. Start with a warm, professional greeting and brief introduction
+2. Begin with a behavioral question that references their experience, such as:
+   - "I see you worked at [Company] as a [Role]. Can you tell me about a challenging project you worked on there?"
+   - "Your resume mentions [specific skill/technology]. How did you apply this in your work at [Company]?"
+   - "I noticed on your LinkedIn that you worked on [project/achievement]. Can you tell me more about that?"
 
-**Additional Context:**
-${resumeText ? 'Resume Summary: ' + resumeText.substring(0, 1000) + (resumeText.length > 1000 ? '...' : '') : ''}
-${linkedinUrl ? 'LinkedIn Profile: ' + linkedinUrl : ''}
-`;
+3. Follow up with deep dive questions about their experiences and skills
+4. Include 1-2 technical questions relevant to their background and the ${jobTitle} role
+5. Conclude with their questions for you and provide brief, constructive feedback
+
+**Candidate's Background (Use this to personalize questions):**
+${resumeText ? `Resume Summary: ${resumeText}` : 'No resume provided'}
+${linkedinUrl ? `LinkedIn Profile: ${linkedinUrl}` : 'No LinkedIn profile provided'}
+
+**Job Details:**
+- Title: ${jobTitle}
+- Description: ${jobDescription}
+
+**Key Points to Remember:**
+1. Reference specific experiences from their resume/LinkedIn naturally
+2. Ask follow-up questions that show you've reviewed their background
+3. Provide a realistic interview experience with appropriate pauses and reactions
+4. Keep responses concise - maximum 2-3 sentences unless providing feedback
+5. If they mention a skill or technology, ask them to elaborate on their experience with it
+6. If they mention a challenge or problem, ask how they overcame it
+7. Provide brief, constructive feedback at the end about their responses and areas for improvement`;
 
   const [interviewStarted, setInterviewStarted] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isThinking, setIsThinking] = useState(false);
   const [chatHistory, setChatHistory] = useState([]);
   const [userTranscript, setUserTranscript] = useState("");
   const [voices, setVoices] = useState([]);
+  const [interviewerMood, setInterviewerMood] = useState('neutral'); // 'neutral', 'happy', 'thinking', 'listening'
 
   const chatEndRef = useRef(null);
 
@@ -93,9 +247,9 @@ ${linkedinUrl ? 'LinkedIn Profile: ' + linkedinUrl : ''}
 
   const speak = (text) => {
     if (synth.speaking) {
-      console.error('Already speaking.');
-      return;
+      synth.cancel();
     }
+    
     const utterThis = new SpeechSynthesisUtterance(text);
     const bestVoice = findBestVoice();
 
@@ -103,10 +257,20 @@ ${linkedinUrl ? 'LinkedIn Profile: ' + linkedinUrl : ''}
       utterThis.voice = bestVoice;
     }
 
-    utterThis.onstart = () => setIsSpeaking(true);
+    // Add slight pitch and rate variations for more natural speech
+    utterThis.pitch = 1 + (Math.random() * 0.2 - 0.1); // Slight pitch variation
+    utterThis.rate = 0.95 + (Math.random() * 0.1); // Slight rate variation
+
+    utterThis.onstart = () => {
+      setIsSpeaking(true);
+      setInterviewerMood('talking');
+    };
+    
     utterThis.onend = () => {
       setIsSpeaking(false);
+      setInterviewerMood('listening');
     };
+    
     synth.speak(utterThis);
   };
 
@@ -139,23 +303,37 @@ ${linkedinUrl ? 'LinkedIn Profile: ' + linkedinUrl : ''}
     if (isListening) {
       recognition.stop();
       setIsListening(false);
+      setInterviewerMood('thinking');
+      
       if (userTranscript) {
         const newHistory = [...chatHistory, { role: 'user', text: userTranscript }];
         setChatHistory(newHistory);
-        generateResponse(newHistory);
+        setIsThinking(true);
+        
+        // Small delay to show thinking animation
+        setTimeout(() => {
+          generateResponse(newHistory);
+          setIsThinking(false);
+        }, 800);
+        
         setUserTranscript("");
+      } else {
+        setInterviewerMood('neutral');
       }
     } else {
       recognition.start();
       setIsListening(true);
+      setInterviewerMood('listening');
     }
   };
 
   // --- AI Generation ---
   const generateResponse = async (currentChatHistory) => {
     setIsLoading(true);
+    setInterviewerMood('thinking');
+    
     const MODEL_NAME = "gemini-2.5-pro";
-    const API_KEY = "AIzaSyAUfXq5yGSzpaYQaIDou3nO1OoLeSP9P1I"; // IMPORTANT: Replace with your actual API key
+    const API_KEY = "AIzaSyAUfXq5yGSzpaYQaIDou3nO1OoLeSP9P1I";
 
     const genAI = new GoogleGenerativeAI(API_KEY);
     const model = genAI.getGenerativeModel({ model: MODEL_NAME });
@@ -174,13 +352,47 @@ ${linkedinUrl ? 'LinkedIn Profile: ' + linkedinUrl : ''}
       });
 
       const responseText = result.response.text();
-      setChatHistory(prev => [...prev, { role: 'ai', text: responseText }]);
-      speak(responseText);
+      
+      // Update mood based on response content
+      const positiveWords = ['great', 'excellent', 'impressive', 'wonderful', 'perfect'];
+      const isPositive = positiveWords.some(word => responseText.toLowerCase().includes(word));
+      
+      setInterviewerMood(isPositive ? 'happy' : 'neutral');
+      
+      // Add typing effect for AI response
+      const words = responseText.split(' ');
+      let currentText = '';
+      
+      for (let i = 0; i < words.length; i++) {
+        currentText += (i === 0 ? '' : ' ') + words[i];
+        setChatHistory(prev => {
+          const newHistory = [...prev];
+          if (newHistory[newHistory.length - 1]?.role === 'ai') {
+            newHistory[newHistory.length - 1].text = currentText + '...';
+          } else {
+            newHistory.push({ role: 'ai', text: currentText + '...' });
+          }
+          return newHistory;
+        });
+        await new Promise(resolve => setTimeout(resolve, Math.random() * 30 + 20));
+      }
+      
+      // Remove the trailing '...' when done
+      setChatHistory(prev => {
+        const newHistory = [...prev];
+        newHistory[newHistory.length - 1].text = currentText;
+        return newHistory;
+      });
+      
+      // Start speaking after a short delay
+      setTimeout(() => speak(responseText), 200);
+      
     } catch (error) {
       console.error("Error generating response:", error);
-      const errorMessage = "Sorry, I encountered an error. Let's try that again.";
+      const errorMessage = "I apologize, but I'm having trouble generating a response. Could you please rephrase your question?";
       setChatHistory(prev => [...prev, { role: 'ai', text: errorMessage }]);
       speak(errorMessage);
+      setInterviewerMood('neutral');
     } finally {
       setIsLoading(false);
     }
@@ -193,25 +405,35 @@ ${linkedinUrl ? 'LinkedIn Profile: ' + linkedinUrl : ''}
     setIsUploading(true);
     setUploadError('');
     setUploadSuccess('');
+    setResumeFile(file);
 
     try {
-      const text = await extractTextFromFile(file);
-      setResumeText(text);
-      setUploadSuccess('Resume uploaded successfully!');
-      setTimeout(() => setUploadSuccess(''), 3000);
+      // Extract raw text first
+      let text = await extractTextFromFile(file);
+      
+      // Process the text to extract structured information
+      const processedText = await extractResumeInfo(text);
+      
+      // Store both raw and processed text
+      setResumeText(processedText);
+      setUploadSuccess('Resume uploaded and processed successfully!');
+      
+      // Log the extracted information for debugging
+      console.log('Extracted resume info:', processedText);
+      
+      // Auto-focus the LinkedIn field for better UX
+      document.getElementById('linkedin-url')?.focus();
+      
     } catch (error) {
       console.error('Error processing file:', error);
-      setUploadError(error.message || 'Failed to process the file. Please try again.');
+      setUploadError('Error processing file. Please make sure it is a valid PDF or DOCX file.');
     } finally {
       setIsUploading(false);
-      // Reset file input
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
     }
   };
 
   const removeResume = () => {
+    setResumeFile(null);
     setResumeText('');
     setUploadSuccess('Resume removed');
     setTimeout(() => setUploadSuccess(''), 3000);

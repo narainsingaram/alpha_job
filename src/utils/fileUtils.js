@@ -1,14 +1,23 @@
 import mammoth from 'mammoth';
+import * as pdfjsLib from 'pdfjs-dist/build/pdf';
 
-// Simple text extraction for PDF files (fallback)
-const extractTextFromPdfFallback = async (file) => {
-  // This is a simple fallback that extracts text from the file name
-  // In a production environment, you'd want to use a proper PDF parsing library
-  console.warn('Using fallback PDF text extraction - limited functionality');
-  return `[PDF Content: ${file.name} - Full text extraction requires additional setup]`;
+// Set up the worker
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+
+
+export const extractTextFromPdf = async (file) => {
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+  let text = '';
+
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    text += content.items.map(item => item.str).join(' ');
+  }
+
+  return text;
 };
-
-export const extractTextFromPdf = extractTextFromPdfFallback;
 
 export const extractTextFromDocx = async (file) => {
   try {
