@@ -44,7 +44,7 @@ const ModernLogin = ({ isEmployer }) => {
           if (rememberMe) {
             Cookies.set("rememberMe", "true", { expires: 7 })
           }
-          navigate("/")
+          navigate("/home")
         } else {
           alert("Invalid employer credentials.")
         }
@@ -58,7 +58,7 @@ const ModernLogin = ({ isEmployer }) => {
         if (rememberMe) {
           Cookies.set("rememberMe", "true", { expires: 7 })
         }
-        navigate("/")
+        navigate("/home")
       } else {
         alert("Invalid student credentials.")
       }

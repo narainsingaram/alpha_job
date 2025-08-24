@@ -10,6 +10,7 @@ import ResumeAnalysis from './pages/ModernResumeAnalysis';
 import Help from './pages/Help.jsx';
 import AI from './pages/AI.jsx';
 import MockInterview from './pages/MockInterview.jsx';
+import LandingPage from './pages/LandingPage.jsx';
 
 const App = () => {
   const location = useLocation();
@@ -19,7 +20,8 @@ const App = () => {
     <>
       {!hideNavBarPaths.includes(location.pathname) && <NavBar />}
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/postings" element={<Home />} />
         <Route path="/create" element={<CreatePosting />} />
         <Route path="/employer-login" element={<Login isEmployer={true} />} />
