@@ -1,8 +1,7 @@
-"use client"
-
 import { useState } from "react"
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from "@google/generative-ai"
 import pdfToText from "react-pdftotext"
+import Spinner from '../components/ModernSpinner';
 
 function PDFParserReact() {
   const [loading, setLoading] = useState(false)

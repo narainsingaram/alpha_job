@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { db } from "../firebase";
 import { collection, query, where, onSnapshot, getDoc, doc, addDoc } from 'firebase/firestore';
-import Spinner from '../components/Spinner';
+import Spinner from '../components/ModernSpinner';
 import Cookies from 'js-cookie';
 import InterviewPrepModal from './AI'; // Import the modal component
 

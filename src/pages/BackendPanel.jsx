@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { db } from "../firebase";
 import { collection, query, where, onSnapshot, doc, deleteDoc, updateDoc } from 'firebase/firestore';
-import Spinner from '../components/Spinner';
+import Spinner from '../components/ModernSpinner';
 import Cookies from 'js-cookie';
 import withAdminAuth from '../utils/hoc/withAdminAuth.js';
 import { Bar, Pie } from 'react-chartjs-2';
