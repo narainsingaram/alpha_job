@@ -17,27 +17,35 @@ import {
 } from '@iconscout/react-unicons';
 import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import { extractTextFromFile } from '../utils/fileUtils';
+import officeBackground from '../asset/random_images/istockphoto-1435220822-612x612.jpg';
 
 // Avatar component for the interviewer
-const InterviewerAvatar = ({ isSpeaking, isListening, isThinking }) => {
+const InterviewerAvatar = ({ isSpeaking, isListening, isThinking, mood }) => {
   const controls = useAnimation();
-  
+  const eyeControls = useAnimation();
+
   useEffect(() => {
     if (isSpeaking) {
-      const sequence = async () => {
-        while (isSpeaking) {
-          await controls.start({
-            y: [0, -5, 0],
-            transition: { duration: 0.6, repeat: Infinity, ease: 'easeInOut' }
-          });
-        }
-      };
-      sequence();
+      controls.start({
+        y: [0, -5, 0],
+        transition: { duration: 0.6, repeat: Infinity, ease: 'easeInOut' }
+      });
     } else {
       controls.stop();
       controls.set({ y: 0 });
     }
   }, [isSpeaking, controls]);
+
+  useEffect(() => {
+    const blink = async () => {
+      while (true) {
+        await eyeControls.start({ scaleY: 0.1, transition: { duration: 0.05 } });
+        await eyeControls.start({ scaleY: 1, transition: { duration: 0.05 } });
+        await new Promise(resolve => setTimeout(resolve, Math.random() * 5000 + 2000));
+      }
+    };
+    blink();
+  }, [eyeControls]);
 
   return (
     <div className="flex flex-col items-center mb-6">
@@ -50,8 +58,8 @@ const InterviewerAvatar = ({ isSpeaking, isListening, isThinking }) => {
             {/* Eyes */}
             <div className="absolute top-1/2 left-0 right-0 flex justify-center -mt-4">
               <div className="flex space-x-4">
-                <div className="w-4 h-4 bg-blue-600 rounded-full"></div>
-                <div className="w-4 h-4 bg-blue-600 rounded-full"></div>
+                <motion.div className="w-4 h-4 bg-blue-600 rounded-full" animate={eyeControls} />
+                <motion.div className="w-4 h-4 bg-blue-600 rounded-full" animate={eyeControls} />
               </div>
             </div>
             
@@ -299,6 +307,8 @@ ${linkedinUrl ? `LinkedIn Profile: ${linkedinUrl}` : 'No LinkedIn profile provid
     };
   }, []);
 
+  const [isTyping, setIsTyping] = useState(false);
+
   const handleListen = () => {
     if (isListening) {
       recognition.stop();
@@ -306,7 +316,7 @@ ${linkedinUrl ? `LinkedIn Profile: ${linkedinUrl}` : 'No LinkedIn profile provid
       setInterviewerMood('thinking');
       
       if (userTranscript) {
-        const newHistory = [...chatHistory, { role: 'user', text: userTranscript }];
+        const newHistory = [...chatHistory, { role: 'user', text: userTranscript, timestamp: new Date() }];
         setChatHistory(newHistory);
         setIsThinking(true);
         
@@ -330,6 +340,7 @@ ${linkedinUrl ? `LinkedIn Profile: ${linkedinUrl}` : 'No LinkedIn profile provid
   // --- AI Generation ---
   const generateResponse = async (currentChatHistory) => {
     setIsLoading(true);
+    setIsTyping(true);
     setInterviewerMood('thinking');
     
     const MODEL_NAME = "gemini-2.5-pro";
@@ -363,15 +374,13 @@ ${linkedinUrl ? `LinkedIn Profile: ${linkedinUrl}` : 'No LinkedIn profile provid
       const words = responseText.split(' ');
       let currentText = '';
       
+      setChatHistory(prev => [...prev, { role: 'ai', text: '', timestamp: new Date() }]);
+
       for (let i = 0; i < words.length; i++) {
         currentText += (i === 0 ? '' : ' ') + words[i];
         setChatHistory(prev => {
           const newHistory = [...prev];
-          if (newHistory[newHistory.length - 1]?.role === 'ai') {
-            newHistory[newHistory.length - 1].text = currentText + '...';
-          } else {
-            newHistory.push({ role: 'ai', text: currentText + '...' });
-          }
+          newHistory[newHistory.length - 1].text = currentText + '...';
           return newHistory;
         });
         await new Promise(resolve => setTimeout(resolve, Math.random() * 30 + 20));
@@ -390,11 +399,12 @@ ${linkedinUrl ? `LinkedIn Profile: ${linkedinUrl}` : 'No LinkedIn profile provid
     } catch (error) {
       console.error("Error generating response:", error);
       const errorMessage = "I apologize, but I'm having trouble generating a response. Could you please rephrase your question?";
-      setChatHistory(prev => [...prev, { role: 'ai', text: errorMessage }]);
+      setChatHistory(prev => [...prev, { role: 'ai', text: errorMessage, timestamp: new Date() }]);
       speak(errorMessage);
       setInterviewerMood('neutral');
     } finally {
       setIsLoading(false);
+      setIsTyping(false);
     }
   };
 
@@ -499,7 +509,10 @@ ${linkedinUrl ? `LinkedIn Profile: ${linkedinUrl}` : 'No LinkedIn profile provid
   };
 
   return (
-    <div className="font-sans bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center min-h-screen p-4">
+    <div 
+      className="font-sans bg-cover bg-center flex items-center justify-center min-h-screen p-4"
+      style={{ backgroundImage: `url(${officeBackground})` }}
+    >
       <motion.div 
         initial="hidden"
         animate="visible"
@@ -545,12 +558,14 @@ ${linkedinUrl ? `LinkedIn Profile: ${linkedinUrl}` : 'No LinkedIn profile provid
                 variants={fadeIn}
                 className="h-full flex flex-col items-center justify-center text-center p-6 w-full max-w-3xl mx-auto"
               >
-                <motion.div 
-                  className="w-24 h-24 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl flex items-center justify-center mb-6 shadow-inner"
-                  animate={pulse}
-                >
-                  <UilMicrophone size={40} className="text-blue-600" />
-                </motion.div>
+                <div className="w-full max-w-2xl mb-6">
+                  <InterviewerAvatar 
+                    isSpeaking={isSpeaking} 
+                    isListening={isListening}
+                    isThinking={isThinking}
+                    mood={interviewerMood}
+                  />
+                </div>
                 <h3 className="text-2xl font-bold text-gray-800 mb-3">Prepare for Your Interview</h3>
                 <p className="text-gray-500 mb-8 max-w-2xl">Upload your resume and LinkedIn profile to get personalized interview questions based on your experience.</p>
                 
@@ -685,6 +700,7 @@ ${linkedinUrl ? `LinkedIn Profile: ${linkedinUrl}` : 'No LinkedIn profile provid
                           }`}
                         >
                           {message.text}
+                          <div className="text-xs text-gray-400 mt-1 text-right">{message.timestamp.toLocaleTimeString()}</div>
                         </div>
                         {message.role === 'user' && (
                           <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0 ml-3 self-end mb-1">
@@ -696,7 +712,18 @@ ${linkedinUrl ? `LinkedIn Profile: ${linkedinUrl}` : 'No LinkedIn profile provid
                   ))}
                 </AnimatePresence>
 
-                {isLoading && (
+                {isTyping && (
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="flex items-center space-x-2 p-4 bg-white rounded-xl border border-gray-100 w-32 shadow-sm"
+                  >
+                    <UilSpinner className="animate-spin text-blue-600" />
+                    <span className="text-sm text-gray-500">Typing...</span>
+                  </motion.div>
+                )}
+
+                {isLoading && !isTyping && (
                   <motion.div 
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
