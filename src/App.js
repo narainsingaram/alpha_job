@@ -14,7 +14,7 @@ import LandingPage from './pages/LandingPage.jsx';
 
 const App = () => {
   const location = useLocation();
-  const hideNavBarPaths = ['/help', '/employer-login', '/student-login'];
+  const hideNavBarPaths = ['/', '/help', '/employer-login', '/student-login'];
 
   return (
     <>

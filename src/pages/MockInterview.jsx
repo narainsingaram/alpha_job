@@ -700,7 +700,11 @@ ${linkedinUrl ? `LinkedIn Profile: ${linkedinUrl}` : 'No LinkedIn profile provid
                           }`}
                         >
                           {message.text}
-                          <div className="text-xs text-gray-400 mt-1 text-right">{message.timestamp.toLocaleTimeString()}</div>
+                          {message.timestamp ? (
+                            <div className="text-xs text-gray-400 mt-1 text-right">
+                              {message.timestamp.toLocaleTimeString()}
+                            </div>
+                          ) : null}
                         </div>
                         {message.role === 'user' && (
                           <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0 ml-3 self-end mb-1">
