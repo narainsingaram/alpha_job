@@ -17,7 +17,8 @@ import {
   UilBriefcase,
   UilFileAlt,
   UilHeadphonesAlt,
-  UilHome
+  UilHome,
+  UilSetting
 } from "@iconscout/react-unicons"
 
 const ModernNavBar = () => {
@@ -120,6 +121,17 @@ const ModernNavBar = () => {
                   <UilHeadphonesAlt className="mr-2 h-4 w-4" />
                   Interview Prep
                 </a>
+                <a
+                  href="/profile"
+                  className={`px-4 py-2 rounded-lg flex items-center text-sm font-medium transition-colors ${
+                    isActive("/profile") 
+                      ? "bg-indigo-50 text-indigo-700" 
+                      : "text-gray-600 hover:text-indigo-600 hover:bg-gray-50"
+                  }`}
+                >
+                  <UilUser className="mr-2 h-4 w-4" />
+                  My Profile
+                </a>
               </>
             )}
             
@@ -169,6 +181,15 @@ const ModernNavBar = () => {
                 {profileOpen && (
                   <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-xl shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
                     <div className="py-1">
+                      {isStudent && (
+                        <a
+                          href="/profile"
+                          className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          <UilSetting className="mr-2 h-4 w-4" />
+                          Profile Settings
+                        </a>
+                      )}
                       {(isEmployer || isStudent || adminMode) && (
                         <button
                           onClick={handleLogout}
@@ -251,6 +272,17 @@ const ModernNavBar = () => {
                 >
                   <UilHeadphonesAlt className="inline mr-2 h-4 w-4" />
                   Interview Prep
+                </a>
+                <a
+                  href="/profile"
+                  className={`block px-3 py-2 rounded-md text-base font-medium ${
+                    isActive("/profile") 
+                      ? "bg-indigo-50 text-indigo-700" 
+                      : "text-gray-600 hover:text-indigo-600 hover:bg-gray-50"
+                  }`}
+                >
+                  <UilUser className="inline mr-2 h-4 w-4" />
+                  My Profile
                 </a>
               </>
             )}

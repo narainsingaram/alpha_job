@@ -2,6 +2,9 @@ import { useState } from "react"
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from "@google/generative-ai"
 import pdfToText from "react-pdftotext"
 import Spinner from '../components/ModernSpinner';
+import { db } from "../firebase";
+import { doc, setDoc } from 'firebase/firestore';
+import Cookies from 'js-cookie';
 import { 
   UilFileUpload, 
   UilAnalysis, 
@@ -10,7 +13,8 @@ import {
   UilFileAlt,
   UilCheckCircle,
   UilExclamationTriangle,
-  UilInfoCircle
+  UilInfoCircle,
+  UilCheck
 } from '@iconscout/react-unicons'
 
 const ModernResumeAnalysis = () => {
@@ -18,6 +22,8 @@ const ModernResumeAnalysis = () => {
   const [chatHistory, setChatHistory] = useState([])
   const [resumeText, setResumeText] = useState("")
   const [fileName, setFileName] = useState("")
+  const [extractedData, setExtractedData] = useState(null)
+  const [saving, setSaving] = useState(false)
 
   // Function to send extracted text to Gemini AI for feedback generation
   const generateFeedback = async (content) => {
@@ -93,6 +99,97 @@ const ModernResumeAnalysis = () => {
     }
   }
 
+  // Function to extract structured data from resume
+  const extractStructuredData = async (content) => {
+    const MODEL_NAME = "gemini-1.5-pro";
+    const API_KEY = "AIzaSyBrFLwWvr-WPscoHu7O-shXHSIZnlP4FNs"; // Replace with your actual API key
+
+    const genAI = new GoogleGenerativeAI(API_KEY)
+    const model = genAI.getGenerativeModel({ model: MODEL_NAME })
+
+    const extractionContext = `
+      You are an AI data extractor. Please extract the following information from the resume in JSON format:
+      
+      {
+        "name": "Full name of the candidate",
+        "email": "Email address",
+        "phone": "Phone number",
+        "skills": ["Array of skills found in the resume"],
+        "experience": "Experience level (high school, college, bachelor, master, phd)",
+        "education": [
+          {
+            "degree": "Degree name",
+            "institution": "Institution name",
+            "year": "Graduation year"
+          }
+        ],
+        "summary": "Brief professional summary (2-3 sentences)"
+      }
+      
+      Extract ONLY the JSON structure with the relevant information. If any information is not available, leave it as an empty string or empty array.
+    `
+
+    const generationConfig = {
+      temperature: 0.3,
+      topK: 5,
+      topP: 0.8,
+      maxOutputTokens: 1024,
+    }
+
+    try {
+      const result = await model.generateContent({
+        contents: [
+          { role: "user", parts: [{ text: extractionContext }] },
+          { role: "user", parts: [{ text: content }] },
+        ],
+        generationConfig,
+      })
+
+      const response = result.response.text()
+      // Extract JSON from response
+      const jsonStart = response.indexOf('{')
+      const jsonEnd = response.lastIndexOf('}') + 1
+      const jsonString = response.substring(jsonStart, jsonEnd)
+      
+      if (jsonString) {
+        const data = JSON.parse(jsonString)
+        setExtractedData(data)
+        return data
+      }
+    } catch (error) {
+      console.error("Error extracting structured data:", error)
+    }
+    
+    return null
+  }
+
+  // Function to save extracted data to student profile
+  const saveToProfile = async () => {
+    if (!extractedData) return
+    
+    setSaving(true)
+    const studentId = Cookies.get('studentId')
+    
+    try {
+      const profileRef = doc(db, "studentProfiles", studentId)
+      await setDoc(profileRef, {
+        name: extractedData.name || "",
+        email: extractedData.email || "",
+        skills: extractedData.skills || [],
+        experience: extractedData.experience || "",
+        education: extractedData.education || [],
+        resumeSummary: extractedData.summary || ""
+      }, { merge: true })
+      
+      alert('Profile updated successfully with resume data!')
+    } catch (error) {
+      console.error("Error saving to profile:", error)
+      alert('Failed to save data to profile.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
   // Function to handle PDF file upload and extract text
   const extractText = (event) => {
     const file = event.target.files[0]
@@ -100,11 +197,13 @@ const ModernResumeAnalysis = () => {
     if (file) {
       setFileName(file.name)
       setChatHistory([]) // Clear previous feedback
+      setExtractedData(null) // Clear previous extracted data
       
       pdfToText(file)
         .then((text) => {
           setResumeText(text)
           generateFeedback(text)
+          extractStructuredData(text)
         })
         .catch((error) => {
           console.error("Failed to extract text from pdf:", error)
@@ -251,55 +350,136 @@ const ModernResumeAnalysis = () => {
             </div>
           </div>
 
-          {/* Right Column - AI Feedback */}
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col h-full">
-            <div className="bg-gradient-to-r from-emerald-600 to-teal-600 p-6">
-              <h2 className="text-xl font-bold text-white flex items-center">
-                <UilAnalysis className="mr-2" size={24} />
-                AI Feedback & Analysis
-              </h2>
-              <p className="text-emerald-100 mt-1">Professional insights to improve your resume</p>
-            </div>
-            
-            <div className="flex-1 p-6 flex flex-col">
-              {loading ? (
-                <div className="flex flex-col items-center justify-center flex-1 py-12">
-                  <Spinner />
-                  <p className="text-emerald-700 font-medium mt-6">Analyzing your resume...</p>
-                  <p className="text-emerald-500 text-sm mt-2">This may take a few moments</p>
-                </div>
-              ) : chatHistory.length > 0 ? (
-                <div className="bg-gray-50 rounded-xl p-5 flex-1 overflow-y-auto">
-                  {chatHistory.map((chatItem) => (
-                    <div key={chatItem.id} className="prose prose-indigo max-w-none">
-                      <div 
-                        className="whitespace-pre-line text-gray-800 prose-headings:font-bold prose-headings:text-indigo-800 prose-li:ml-4"
-                        dangerouslySetInnerHTML={formatFeedback(chatItem.text)}
-                      />
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center flex-1 py-12 text-center">
-                  <div className="bg-emerald-100 rounded-full p-4 w-20 h-20 flex items-center justify-center mb-6">
-                    <UilInfoCircle className="text-emerald-600" size={40} />
+          {/* Right Column - AI Feedback and Data Extraction */}
+          <div className="space-y-6">
+            {/* AI Feedback */}
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col h-full">
+              <div className="bg-gradient-to-r from-emerald-600 to-teal-600 p-6">
+                <h2 className="text-xl font-bold text-white flex items-center">
+                  <UilAnalysis className="mr-2" size={24} />
+                  AI Feedback & Analysis
+                </h2>
+                <p className="text-emerald-100 mt-1">Professional insights to improve your resume</p>
+              </div>
+              
+              <div className="flex-1 p-6 flex flex-col">
+                {loading ? (
+                  <div className="flex flex-col items-center justify-center flex-1 py-12">
+                    <Spinner />
+                    <p className="text-emerald-700 font-medium mt-6">Analyzing your resume...</p>
+                    <p className="text-emerald-500 text-sm mt-2">This may take a few moments</p>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">No Analysis Yet</h3>
-                  <p className="text-gray-600 max-w-md">
-                    Upload your resume to receive personalized AI feedback on how to improve it
+                ) : chatHistory.length > 0 ? (
+                  <div className="bg-gray-50 rounded-xl p-5 flex-1 overflow-y-auto">
+                    {chatHistory.map((chatItem) => (
+                      <div key={chatItem.id} className="prose prose-indigo max-w-none">
+                        <div 
+                          className="whitespace-pre-line text-gray-800 prose-headings:font-bold prose-headings:text-indigo-800 prose-li:ml-4"
+                          dangerouslySetInnerHTML={formatFeedback(chatItem.text)}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center flex-1 py-12 text-center">
+                    <div className="bg-emerald-100 rounded-full p-4 w-20 h-20 flex items-center justify-center mb-6">
+                      <UilInfoCircle className="text-emerald-600" size={40} />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-800 mb-2">No Analysis Yet</h3>
+                    <p className="text-gray-600 max-w-md">
+                      Upload your resume to receive personalized AI feedback on how to improve it
+                    </p>
+                  </div>
+                )}
+              </div>
+              
+              <div className="px-6 pb-6">
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                  <p className="text-amber-800 text-sm">
+                    <span className="font-semibold">Privacy Notice:</span> Your resume data is processed securely and is not stored after analysis. 
+                    The AI feedback is generated using Google's Gemini AI model.
                   </p>
                 </div>
-              )}
-            </div>
-            
-            <div className="px-6 pb-6">
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-                <p className="text-amber-800 text-sm">
-                  <span className="font-semibold">Privacy Notice:</span> Your resume data is processed securely and is not stored after analysis. 
-                  The AI feedback is generated using Google's Gemini AI model.
-                </p>
               </div>
             </div>
+
+            {/* Extracted Data */}
+            {extractedData && (
+              <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+                <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6">
+                  <h2 className="text-xl font-bold text-white flex items-center">
+                    <UilCheck className="mr-2" size={24} />
+                    Extracted Data
+                  </h2>
+                  <p className="text-indigo-100 mt-1">Information extracted from your resume</p>
+                </div>
+                
+                <div className="p-6">
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="font-medium text-gray-700">Name</h3>
+                      <p className="text-gray-900">{extractedData.name || "Not found"}</p>
+                    </div>
+                    
+                    <div>
+                      <h3 className="font-medium text-gray-700">Email</h3>
+                      <p className="text-gray-900">{extractedData.email || "Not found"}</p>
+                    </div>
+                    
+                    <div>
+                      <h3 className="font-medium text-gray-700">Experience Level</h3>
+                      <p className="text-gray-900">{extractedData.experience || "Not found"}</p>
+                    </div>
+                    
+                    <div>
+                      <h3 className="font-medium text-gray-700">Skills</h3>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {extractedData.skills && extractedData.skills.length > 0 ? (
+                          extractedData.skills.map((skill, index) => (
+                            <span 
+                              key={index} 
+                              className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm"
+                            >
+                              {skill}
+                            </span>
+                          ))
+                        ) : (
+                          <p className="text-gray-500">No skills found</p>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h3 className="font-medium text-gray-700">Summary</h3>
+                      <p className="text-gray-900">{extractedData.summary || "Not found"}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6">
+                    <button
+                      onClick={saveToProfile}
+                      disabled={saving}
+                      className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all shadow-md hover:shadow-lg flex items-center justify-center disabled:opacity-50"
+                    >
+                      {saving ? (
+                        <>
+                          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Saving to Profile...
+                        </>
+                      ) : (
+                        <>
+                          <UilCheck className="mr-2" size={20} />
+                          Save to Profile
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

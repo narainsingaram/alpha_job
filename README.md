@@ -9,7 +9,10 @@ AlphaJob is a full-stack job listing platform designed to seamlessly connect stu
 - Apply for jobs with a simple and secure form
 - View application history and track job statuses
 - Access analytics on job types and opportunities posted
-- AI Resume Analysis where you can uplaod your resume and get straightforward feedback
+- AI Resume Analysis where you can upload your resume and get straightforward feedback
+- Personalized job recommendations based on your profile and skills
+- AI-powered interview preparation tool
+- Student profile management to track skills, experience, and preferences
 
 ### 🧑‍💼 For Employers
 - Submit job postings via a user-friendly form
@@ -26,12 +29,10 @@ AlphaJob is a full-stack job listing platform designed to seamlessly connect stu
 
 
 ## 📈 Future Features
-- Student recommendations (based on skills + interests)
 - Direct messaging between employers and students
 - Push/email notifications for new jobs
-- Mobile version (React Native or Flutter
+- Mobile version (React Native or Flutter)
   
-
 ## 💻 Run AlphaJob Locally
 
 ### 1. Clone the Repository

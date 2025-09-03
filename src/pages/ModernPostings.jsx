@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { db } from "../firebase";
-import { collection, onSnapshot, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, onSnapshot, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
 import Spinner from '../components/ModernSpinner';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
+import { calculateMatchingScore, getTopMatchingJobs } from '../utils/matchingAlgorithm';
 import { 
   UilSearch, 
   UilMapMarker, 
@@ -18,15 +19,19 @@ import {
   UilMoneyBill,
   UilExternalLinkAlt,
   UilHeart,
-  UilShareAlt
+  UilShareAlt,
+  UilStar,
+  UilArrowUpRight
 } from '@iconscout/react-unicons';
 
 // Import all images from the asset/random_images folder
-const imagesContext = require.context('../asset/random_images', false, /\.(png|jpe?g|svg|webp|avif)$/);
+const imagesContext = require.context('../asset/random_images', false, /\\.(png|jpe?g|svg|webp|avif)$/);
 const images = imagesContext.keys().map(imagesContext);
 
 const ModernHome = () => {
     const [postings, setPostings] = useState([]);
+    const [recommendedJobs, setRecommendedJobs] = useState([]);
+    const [studentProfile, setStudentProfile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [showForm, setShowForm] = useState(null);
@@ -67,6 +72,7 @@ const ModernHome = () => {
         salaryRange: '',
         remote: ''
     });
+    const [activeTab, setActiveTab] = useState('recommended'); // 'recommended' or 'all'
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -77,6 +83,9 @@ const ModernHome = () => {
                 navigate('/student-login');
             } else {
                 fetchPostings();
+                if (studentId) {
+                    fetchStudentProfile(studentId);
+                }
             }
         };
 
@@ -101,8 +110,33 @@ const ModernHome = () => {
             };
         };
 
+        const fetchStudentProfile = async (studentId) => {
+            try {
+                const profileDoc = await getDoc(doc(db, "studentProfiles", studentId));
+                if (profileDoc.exists()) {
+                    setStudentProfile(profileDoc.data());
+                }
+            } catch (error) {
+                console.error("Error fetching student profile:", error);
+            }
+        };
+
         checkAuth();
     }, [navigate]);
+
+    // Update recommended jobs when postings or student profile changes
+    useEffect(() => {
+        if (postings.length > 0 && studentProfile) {
+            const topJobs = getTopMatchingJobs(studentProfile, postings, 6);
+            setRecommendedJobs(topJobs);
+        } else if (postings.length > 0) {
+            // If no profile, show top 6 jobs by date
+            const sortedJobs = [...postings].sort((a, b) => 
+                (b.dateAdded?.seconds || 0) - (a.dateAdded?.seconds || 0)
+            );
+            setRecommendedJobs(sortedJobs.slice(0, 6));
+        }
+    }, [postings, studentProfile]);
 
     const handleApply = (postingId) => {
         setShowForm(postingId);
@@ -317,11 +351,43 @@ const ModernHome = () => {
                 </div>
             </div>
 
+            {/* Tabs for Recommended vs All Jobs */}
+            <div className="container mx-auto px-4 py-2">
+                <div className="bg-white rounded-2xl shadow-lg p-2 mb-6 w-fit">
+                    <div className="flex">
+                        <button
+                            onClick={() => setActiveTab('recommended')}
+                            className={`px-6 py-3 rounded-xl font-medium transition-all ${
+                                activeTab === 'recommended'
+                                    ? 'bg-indigo-600 text-white shadow-md'
+                                    : 'text-gray-600 hover:text-indigo-600'
+                            }`}
+                        >
+                            <UilStar className="inline mr-2" size={18} />
+                            Recommended for You
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('all')}
+                            className={`px-6 py-3 rounded-xl font-medium transition-all ${
+                                activeTab === 'all'
+                                    ? 'bg-indigo-600 text-white shadow-md'
+                                    : 'text-gray-600 hover:text-indigo-600'
+                            }`}
+                        >
+                            <UilBriefcase className="inline mr-2" size={18} />
+                            All Jobs
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             {/* Filters and Sorting */}
-            <div className="container mx-auto px-4 py-6">
+            <div className="container mx-auto px-4 py-2">
                 <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                        <h2 className="text-2xl font-bold text-gray-800">Job Opportunities</h2>
+                        <h2 className="text-2xl font-bold text-gray-800">
+                            {activeTab === 'recommended' ? 'Recommended Jobs' : 'All Job Opportunities'}
+                        </h2>
                         
                         <div className="flex flex-wrap gap-3">
                             <div className="relative">
@@ -374,8 +440,8 @@ const ModernHome = () => {
 
                 {/* Job Listings */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-                    {filteredPostings.length > 0 ? (
-                        filteredPostings.map((posting, index) => {
+                    {(activeTab === 'recommended' ? recommendedJobs : filteredPostings).length > 0 ? (
+                        (activeTab === 'recommended' ? recommendedJobs : filteredPostings).map((posting, index) => {
                             const imageIndex = index % images.length;
                             const imageSrc = images[imageIndex];
                             const isFavorite = favorites.includes(posting.id);
@@ -404,6 +470,12 @@ const ModernHome = () => {
                                                 {posting.jobType}
                                             </span>
                                         </div>
+                                        {posting.matchingScore && (
+                                            <div className="absolute top-4 left-4 bg-amber-500 text-white text-xs font-bold px-2 py-1 rounded-full flex items-center">
+                                                <UilStar size={12} className="mr-1" />
+                                                {posting.matchingScore}%
+                                            </div>
+                                        )}
                                     </div>
                                     
                                     <div className="p-6">
@@ -463,18 +535,34 @@ const ModernHome = () => {
                     ) : (
                         <div className="col-span-full bg-white rounded-2xl shadow-lg p-12 text-center">
                             <div className="text-5xl mb-4">🔍</div>
-                            <h3 className="text-2xl font-bold text-gray-800 mb-2">No Jobs Found</h3>
-                            <p className="text-gray-600 mb-6">Try adjusting your search or filter criteria</p>
-                            <button 
-                                onClick={() => {
-                                    setSearchQuery('');
-                                    setActiveFilters({jobType: '', salaryRange: '', remote: ''});
-                                    setFilterLocation('');
-                                }}
-                                className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors"
-                            >
-                                Clear Filters
-                            </button>
+                            <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                                {activeTab === 'recommended' ? 'No Recommended Jobs Found' : 'No Jobs Found'}
+                            </h3>
+                            <p className="text-gray-600 mb-6">
+                                {activeTab === 'recommended' 
+                                    ? "We couldn't find any jobs that match your profile. Try updating your profile or check back later." 
+                                    : "Try adjusting your search or filter criteria"}
+                            </p>
+                            {activeTab === 'recommended' ? (
+                                <a 
+                                    href="/profile" 
+                                    className="inline-flex items-center bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all shadow-md hover:shadow-lg"
+                                >
+                                    Update Your Profile
+                                    <UilArrowUpRight className="ml-2" size={18} />
+                                </a>
+                            ) : (
+                                <button 
+                                    onClick={() => {
+                                        setSearchQuery('');
+                                        setActiveFilters({jobType: '', salaryRange: '', remote: ''});
+                                        setFilterLocation('');
+                                    }}
+                                    className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors"
+                                >
+                                    Clear Filters
+                                </button>
+                            )}
                         </div>
                     )}
                 </div>
